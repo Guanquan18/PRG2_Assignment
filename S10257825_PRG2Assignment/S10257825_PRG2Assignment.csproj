@@ -43,8 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cone.cs" />
+    <Compile Include="Cup.cs" />
+    <Compile Include="Customer.cs" />
+    <Compile Include="Flavour.cs" />
+    <Compile Include="IceCream.cs" />
+    <Compile Include="order.cs" />
+    <Compile Include="PointCard.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Topping.cs" />
+    <Compile Include="Waffle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

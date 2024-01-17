@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace S10257825_PRG2Assignment
 {
-    internal class Program
+    internal partial class Program
     {
         static void Main(string[] args)
         {
