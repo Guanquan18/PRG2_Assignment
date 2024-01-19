@@ -10,7 +10,31 @@ namespace S10257825_PRG2Assignment
     {
         class Topping
         {
+            //regular fields 
+            private string type;
+            public string Type
+            {
+                get { return type; }
+                set { type = value; }
+            }
 
+            //unparameterised constructor
+            public Topping ()
+            {
+
+            }
+
+            //parameterised constructor
+            public Topping (string type)
+            {
+                this.type = type;
+            }
+
+            //tostring method 
+            public override string ToString()
+            {
+                return $"Topping : {Type}";
+            }
         }
     }
 }
