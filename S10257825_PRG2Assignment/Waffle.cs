@@ -22,19 +22,12 @@ namespace S10257825_PRG2Assignment
 
             //unparameterised constructor
             //make sure to implement base 
-            public Waffle () : base ()
-            {
-
-            }
+            public Waffle () : base () { }
 
             //parameterised constructor 
             //retrive the base values from the superclass
             public Waffle(string option, int scoops, List<Flavour> Flavours, List<Topping> Toppings, string waffleFlavour) : base(option, scoops, Flavours, Toppings)
             {
-                this.Option = option;
-                this.Scoops = scoops;
-                this.Flavours = Flavours;
-                this.Toppings = Toppings;
                 this.waffleFlavour = waffleFlavour;
             }
 
@@ -78,7 +71,7 @@ namespace S10257825_PRG2Assignment
             //tostring method for waffle class
             public override string ToString()
             {
-                return $"Waffle : {Scoops} Scoops | Flavour : {waffleFlavour} | Price : ${CalculatePrice()}";
+                return $"\nOption: {Option} | {Scoops} Scoops | " + base.ToString() + $" | Price : ${CalculatePrice():c2}";
             }
         }
     }

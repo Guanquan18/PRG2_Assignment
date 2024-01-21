@@ -49,7 +49,7 @@ namespace S10257825_PRG2Assignment
             //tostring method
             public override string ToString()
             {
-                return $"Flavour : {Type}";
+                return $"{Type}";
             }
         }
     }

@@ -82,7 +82,7 @@ namespace S10257825_PRG2Assignment
 
             public override string ToString()
             {
-                return $"";
+                return $"\nOrderID: {Id}, Time Received: {TimeReceived}, Time Fulfilled: {TimeFulfilled}";
             }
         }
     }

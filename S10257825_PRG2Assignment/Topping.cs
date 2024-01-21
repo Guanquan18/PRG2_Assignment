@@ -27,13 +27,13 @@ namespace S10257825_PRG2Assignment
             //parameterised constructor
             public Topping (string type)
             {
-                this.type = type;
+                this.Type = type;
             }
 
             //tostring method 
             public override string ToString()
             {
-                return $"Topping : {Type}";
+                return $"{Type}";
             }
         }
     }

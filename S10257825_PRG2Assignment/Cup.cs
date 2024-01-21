@@ -14,20 +14,11 @@ namespace S10257825_PRG2Assignment
         {
             //unparameterised constructor
             //make sure to implement base 
-            public Cup () : base ()
-            {
-
-            }
+            public Cup () : base () { }
             
             //parameterised constructor 
             //retrive the base values from the superclass
-            public Cup (string option, int  scoops, List<Flavour> Flavours, List<Topping> Toppings) : base (option, scoops, Flavours, Toppings)
-            {
-                this.Option = option;
-                this.Scoops = scoops;
-                this.Flavours = Flavours;
-                this.Toppings = Toppings;
-            }
+            public Cup (string option, int  scoops, List<Flavour> Flavours, List<Topping> Toppings) : base (option, scoops, Flavours, Toppings) { }
 
             //method for Cup class
             public override double CalculatePrice()
@@ -64,7 +55,7 @@ namespace S10257825_PRG2Assignment
             public override string ToString()
             {
                 //logical output for the tostring method
-                return $"Cup : {Scoops} Scoops | Flavour : {string.Join(", ", Flavours)} | Price : ${CalculatePrice()})";
+                return $"\nOption: {Option} | {Scoops} Scoops | " + base.ToString() + $" | Price : ${CalculatePrice():c2})" ;
             }
         }
     }

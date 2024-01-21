@@ -22,19 +22,12 @@ namespace S10257825_PRG2Assignment
 
             //unparameterised constructor
             //make sure to implement base
-            public Cone () : base ()
-            {
-
-            }
+            public Cone () : base () { }
 
             //parameterised constructor 
             //retrive the base values from the superclass
             public Cone(string option, int scoops, List<Flavour> Flavours, List<Topping> Toppings, bool dipped) : base(option, scoops, Flavours, Toppings)
             {
-                this.Option = option;
-                this.Scoops = scoops;
-                this.Flavours = Flavours;
-                this.Toppings = Toppings;
                 this.Dipped = dipped;
             }
 
@@ -79,7 +72,8 @@ namespace S10257825_PRG2Assignment
             //tostring method for cones class
             public override string ToString()
             {
-                return $"Cone : ({Scoops} Scoops | Flavours : {string.Join("," , Flavours)} | Price : ${CalculatePrice()})";
+                return $"\nOption: {Option} | {Scoops} Scoops | " + base.ToString() + $" | Price : ${CalculatePrice():c2}";
+                
             }
         }
     }

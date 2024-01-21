@@ -92,7 +92,7 @@ namespace S10257825_PRG2Assignment
 
             public override string ToString()
             {
-                return $"";
+                return $"FLavours : [{string.Join(", ",Flavours)}] | Toppings: [{string.Join(", ",Toppings)}]";
             }
 
         }
