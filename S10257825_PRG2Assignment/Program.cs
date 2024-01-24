@@ -180,11 +180,6 @@ namespace S10257825_PRG2Assignment
 
             InitialiseHistory();  //  Initialise customers Object and Order History
 
-            foreach( Customer customer in customerDict.Values)
-            {
-                Console.WriteLine(customer.ToString());
-                displayOrder(customer.OrderHistory.ToArray());
-            }
             /*foreach (KeyValuePair<int, Customer> kvp in customerDict)
             {
                 Customer customer = kvp.Value;
