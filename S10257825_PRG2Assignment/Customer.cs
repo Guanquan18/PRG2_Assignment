@@ -68,12 +68,11 @@ namespace S10257825_PRG2Assignment
             }
 
             // Methods
-            /*public Order MakeOrder()
+            public Order MakeOrder()
             {
-                Order order =  ;
-                CurrentOrder = order;
-                return order;
-            }*/
+                Order newOrder = new Order(10,DateTime.Now);
+                return newOrder;
+            }
 
             public bool isBirthday()
             {
@@ -90,7 +89,7 @@ namespace S10257825_PRG2Assignment
 
             public override string ToString()
             {
-                return $"Name: {Name}\tMemberId: {MemberId}\tDob: {Dob.ToString("d/M/yyy")}\tRewards:{Rewards.Tier},{Rewards.Points}";
+                return $"Name: {Name,-15} MemberId: {MemberId,-10} Dob: {Dob.ToString("dd/MM/yyyy"),-12} Membership: {Rewards.Tier,-10} Points: {Rewards.Points,-5}";
             }
 
         }

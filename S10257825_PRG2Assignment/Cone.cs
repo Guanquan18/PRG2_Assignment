@@ -72,7 +72,7 @@ namespace S10257825_PRG2Assignment
             //tostring method for cones class
             public override string ToString()
             {
-                return $"\nOption: {Option} | {Scoops} Scoops | " + base.ToString() + $" | Price : ${CalculatePrice():c2}";
+                return $"{Option} | {Scoops} Scoops | " + base.ToString() + $" | Price : {CalculatePrice():c2}";
                 
             }
         }

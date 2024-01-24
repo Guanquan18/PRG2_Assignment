@@ -16,7 +16,7 @@ namespace S10257825_PRG2Assignment
             // Properties
             private int _id;
             private DateTime _timeReceived;
-            private DateTime? _timeFulfilled;
+            private DateTime? _timeFulfilled = null;
             private List<IceCream> _iceCreamList = new List<IceCream>();
 
             // Attributes
@@ -30,9 +30,9 @@ namespace S10257825_PRG2Assignment
                 get { return _timeReceived; }
                 set { _timeReceived = value; }
             }
-            public DateTime TimeFulfilled
+            public DateTime? TimeFulfilled
             {
-                get { return (DateTime)_timeFulfilled; }
+                get { return _timeFulfilled; }
                 set { _timeFulfilled = value; }
             }
             public List<IceCream> IceCreamList
@@ -82,7 +82,22 @@ namespace S10257825_PRG2Assignment
 
             public override string ToString()
             {
-                return $"\nOrderID: {Id}, Time Received: {TimeReceived}, Time Fulfilled: {TimeFulfilled}";
+                string orderString;
+                if (TimeFulfilled == null)
+                {
+                    orderString = $"OrderID: {Id} | Time Received: {TimeReceived} | Time Fulfilled: Not Avaialble\n";
+                }
+                else
+                {
+                    orderString = $"OrderID: {Id} | Time Received: {TimeReceived} | Time Fulfilled: {TimeFulfilled}\n";
+                }
+                string iceCreamString = "";
+                for (int i=0; i<IceCreamList.Count; i++)
+                {
+                    iceCreamString+= $"{i+1}. {IceCreamList[i].ToString()}\n";
+                }
+                
+                return orderString+iceCreamString;
             }
         }
     }

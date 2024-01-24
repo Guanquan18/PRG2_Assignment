@@ -55,7 +55,7 @@ namespace S10257825_PRG2Assignment
             public override string ToString()
             {
                 //logical output for the tostring method
-                return $"\nOption: {Option} | {Scoops} Scoops | " + base.ToString() + $" | Price : ${CalculatePrice():c2})" ;
+                return $"{Option} | {Scoops} Scoops | " + base.ToString() + $" | Price : {CalculatePrice():c2}" ;
             }
         }
     }
