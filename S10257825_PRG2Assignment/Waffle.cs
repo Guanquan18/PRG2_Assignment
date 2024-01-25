@@ -54,7 +54,7 @@ namespace S10257825_PRG2Assignment
                 {
                     if (w.Premium)
                     {
-                        wafflePrice += 2 * w.Quantity;  //addition of 2 dollars for premium flavours of waffle
+                        wafflePrice += 2;  //addition of 2 dollars for premium flavours of waffle
                     }
                 }
 
@@ -71,7 +71,7 @@ namespace S10257825_PRG2Assignment
             //tostring method for waffle class
             public override string ToString()
             {
-                return $"{Option} | {Scoops} Scoops | " + base.ToString() + $" | Price : {CalculatePrice():c2}";
+                return $"\t{Option}\n\t{Scoops} Scoop(s)\n\tWaffle flavour: {WaffleFlavour}" + base.ToString() + $"\n\tPrice : {CalculatePrice():c2}";
             }
         }
     }

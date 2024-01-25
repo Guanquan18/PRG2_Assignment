@@ -43,7 +43,7 @@ namespace S10257825_PRG2Assignment
                 {
                     if (f.Premium)
                     {
-                        totalPrice += 2 * f.Quantity;  //applies additional charges of 2 dollars for premium flavours (durian,ube,sea salt)
+                        totalPrice += 2 ;  //applies additional charges of 2 dollars for premium flavours (durian,ube,sea salt)
                     }
                 }
                 totalPrice += 1 * Toppings.Count;  //applies charge of 1 dollar for every topping on top of scoops checks toppings from the toppings list
@@ -55,7 +55,7 @@ namespace S10257825_PRG2Assignment
             public override string ToString()
             {
                 //logical output for the tostring method
-                return $"{Option} | {Scoops} Scoops | " + base.ToString() + $" | Price : {CalculatePrice():c2}" ;
+                return $"\t{Option}\n\t{Scoops} Scoop(s)" + base.ToString() + $"\n\tPrice: {CalculatePrice():c2}" ;
             }
         }
     }

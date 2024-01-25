@@ -25,25 +25,14 @@ namespace S10257825_PRG2Assignment
                 set { premium = value; }
             }
 
-            private int quantity;
-            public int Quantity
-            {
-                get { return quantity; }
-                set { quantity = value; }
-            }
-
             //unparameterised constructor 
-            public Flavour()
-            {
-
-            }
+            public Flavour() { }
 
             //parameterised constructor
-            public Flavour (string type, bool premium, int quantity)
+            public Flavour (string type, bool premium)
             {
                 this.type = type;
                 this.premium = premium;
-                this.quantity = quantity;
             }
 
             //tostring method

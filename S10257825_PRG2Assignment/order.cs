@@ -94,7 +94,7 @@ namespace S10257825_PRG2Assignment
                 string iceCreamString = "";
                 for (int i=0; i<IceCreamList.Count; i++)
                 {
-                    iceCreamString+= $"{i+1}. {IceCreamList[i].ToString()}\n";
+                    iceCreamString+= $"\n[{i+1}]{IceCreamList[i].ToString()}\n";
                 }
                 
                 return orderString+iceCreamString;

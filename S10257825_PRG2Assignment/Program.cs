@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.IO;
+using System.Net.NetworkInformation;
 
 namespace S10257825_PRG2Assignment
 {
@@ -104,19 +105,9 @@ namespace S10257825_PRG2Assignment
                             if (cost == 2) 
                             { isPremium = true; }
 
-                            // Check for duplicate flavours
-                            foreach (Flavour f in flavourList)
-                            {
-                                if (f.Type == flavour)
-                                {
-                                    f.Quantity += 1;
-                                    isDuplicate = true;
-                                }
-                            }
-
                             if (!isDuplicate)
                             { 
-                                flavourList.Add(new Flavour(flavour, isPremium, 1)); // Add the flavour object to the list
+                                flavourList.Add(new Flavour(flavour, isPremium)); // Add the flavour object to the list
                             }  
                         }
 
@@ -178,7 +169,7 @@ namespace S10257825_PRG2Assignment
                 }
             }
 
-            InitialiseHistory();  //  Initialise customers Object and Order History
+            InitialiseHistory();  //  Initialise customers Object and Order 
 
             /*foreach (KeyValuePair<int, Customer> kvp in customerDict)
             {
@@ -272,26 +263,31 @@ namespace S10257825_PRG2Assignment
                             Console.Write("Enter your option: ");
                             option = int.Parse(Console.ReadLine().Trim());
 
-                            if (option<0 || option>6)
+                            if (option<0 || option>6)   //  Check if the option is between 0 and 6
                             {
-                                Console.WriteLine("Please enter an option between 0 and 6. Try Again");
+                                Console.WriteLine("Please enter an option between 0 and 6. Try Again\n");
                                 continue;
                             }
                             break;
                         }
                         catch (FormatException)
                         {
-                            Console.WriteLine("Please enter a valid integer. try again.");
+                            Console.WriteLine("Please enter a valid integer. Try again.\n");
                         }
                     }
 
-                    if (option == 0) { break; } //  Exit the program
+                    if (option == 0) //  Exit the program
+                    {
+                        Console.WriteLine("Thank you for using our ice cream Ice Cream Management System.\nCome back again. BYE!!!");
+                        break; 
+                    } 
                     else if (option == 1) { option1(); }
                     else if (option == 2) { option2(); }
                     else if (option == 3) { option3(); }
                     else if (option == 4) { option4(); }
                     else if (option == 5) { option5(); }
-                    else {  }
+                    else { option6(); }
+
                 }
             }
             displayMenu();
@@ -339,33 +335,45 @@ namespace S10257825_PRG2Assignment
                 string name;
                 int memberId;
                 DateTime dob = DateTime.Now;
+
+                Console.Write("Enter customer name: ");
+                name = Console.ReadLine();
+
                 while (true)
                 {
-                    Console.Write("Enter customer name: ");
-                    name = Console.ReadLine();
-
-                    //  Validate user inputs
+                    //  Validate user inputs for Member Id
                     try
                     {
                         Console.Write("Enter customer Id: ");
                         memberId = int.Parse(Console.ReadLine().Trim());
+
+                        //  Check for at least 6 digits
+                        if (memberId < 100000 && memberId > 999999)
+                        {
+                            Console.WriteLine("Please enter a Id with 6 digits. Try again.");
+                            continue;
+                        }
+                        break;
                     }
                     catch (FormatException)
                     {
                         Console.WriteLine("Please enter a valid Member Id. Try again.");
-                        continue;
                     }
+                }
+                while (true)
+                {
+                    //  Validate user inputs for Date of Birth
                     try
                     {
                         Console.Write("Enter customer Date of Birth in this format (dd/MM/yyyy): ");
                         dob = DateTime.Parse(Console.ReadLine().Trim());
+                        break;
                     }
                     catch (FormatException)
                     {
                         Console.WriteLine("Please enter a valid Date of Birth in this format (dd/MM/yyyy). Try again.");
                         continue;
                     }
-                    break;
                 }
 
                 //  Create new customer object
@@ -397,33 +405,32 @@ namespace S10257825_PRG2Assignment
                 option1();
 
                 //  Prompt user to select a customer and retrieve the selected customer
-                int memberId;
-                while (true)
-                {
-                    try
-                    {
-                        Console.Write("Enter the customer Id: ");
-                        memberId = int.Parse(Console.ReadLine().Trim());
-                        
-                        if (customerDict.ContainsKey(memberId))
-                        { break; }
-                        else
-                        { Console.WriteLine("Please enter a valid customer Id. Try again."); }
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("Please enter a valid customer Id in integer. Try again.");
-                    }
-                }
-
+                int memberId = getMemberId(false);
+                
                 //  Retrieve the customer object
                 Customer customer = customerDict[memberId];
-                List<IceCream> iceCreamList= new List<IceCream>();
+
+                //  Check for existing order
+                if (customer.CurrentOrder != null)
+                {
+                    Console.WriteLine("You have an existing order. Please choose option 6 to modify your order\n");
+                    return;
+                }
+
+                Order newOrder = customer.MakeOrder();  //  Create an empty order object for CurrentOrder inside the customer object
 
                 bool repeat = false;
                 do
                 {
-                    iceCreamList.Add(makeiceCream()); //  Create IceCream Object and it to the list
+                    //  Prompt user to enter their ice cream order (option, scoops, flavours, toppings)
+                    string option = getOption();
+                    int scoops = getScoops();
+                    List<Flavour> flavourList = getFlavoursList(scoops);
+                    int numToppings = getNumToppings();
+                    List<Topping> toppingList = getToppingList(numToppings);
+
+                    //  Create IceCream Object and it to the list Add the ice cream list to the order object
+                    newOrder.AddIceCream(makeiceCream(option, scoops, flavourList, toppingList)); 
 
                     // Ask if the user would like to add another ice cream to the order
                     while (true)
@@ -441,186 +448,52 @@ namespace S10257825_PRG2Assignment
                     
                 } while (repeat);
 
-                Order newOrder = customer.MakeOrder();  //  Create an empty order object for CurrentOrder inside the customer object
-
-                newOrder.IceCreamList.AddRange(iceCreamList);   //  Add the ice cream list to the order object
                 customer.CurrentOrder = newOrder;   //  Add the order object to the customer object
 
                 if (customer.Rewards.Tier == "Gold")
-                {
-                    goldQueue.Enqueue(newOrder);   //  Add the order object to the gold queue
-                }
+                { goldQueue.Enqueue(newOrder); }    //  Add the order object to the gold queue
                 else
-                {
-                    normalQueue.Enqueue(newOrder);  //  Add the order object to the normal queue
-                }
-
+                { normalQueue.Enqueue(newOrder); }  //  Add the order object to the normal queue
+                
                 Console.WriteLine("\nOrder has been made successfully.\n");
             }
 
-            IceCream makeiceCream()
+            int getMemberId(bool forOption6)
             {
-                string displayAvailableOption(Dictionary<string,int> dictOptions) //  Display available Flavours and Toppings
-                {
-                    List<string> list = new List<string>();
-                    Console.WriteLine();
-                    foreach(string key in dictOptions.Keys)
-                    {
-                        list.Add(key);
-                    }
-                    return $"{string.Join(", ",list)}";
-                }
-                
-                //  Prompt user to enter their ice cream order (option, scoops, flavours, toppings)
-                string option;
-                int scoops;
-                List<Flavour> flavourList = new List<Flavour>();
-                int numToppings;
-                List<Topping> toppingList = new List<Topping>();
-                    
-                /*  Input validation for options    */
+                int memberId;
                 while (true)
                 {
                     try
                     {
-                        Console.Write("\nEnter the option (Cup, Cone, Waffle): ");
-                        option = Console.ReadLine().Trim().ToLower();
+                        Console.Write("Enter the customer Id: ");
+                        memberId = int.Parse(Console.ReadLine().Trim());
 
-                        if (option != "cup" && option != "cone" && option != "waffle")  //  Check if the option is an available option
-                        {
-                            Console.WriteLine("Please enter a valid option. Try again.");
-                        }
-                        else { break; }
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("Please enter a valid option (Cup, Cone, Waffle). Try again.");
-                    }
-                }
-
-                /*  Input validation for number of scoops   */
-                while (true)
-                {
-                    try
-                    {
-                        Console.Write("\nEnter the number of scoops (Max 3 scoops): ");
-                        scoops = int.Parse(Console.ReadLine().Trim());
-
-                        if (scoops >= 1 && scoops <= 3) //  Check if the number of scoops is between 1 and 3
-                        { break; }
-                        else
-                        { Console.WriteLine("Please enter a valid number of scoops from 1 to 3. Try again."); }
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("Please enter a valid number of scoops in integer. Try again.");
-                    }
-                }
-
-                /*  Input validation for flavours   */
-                for (int i=0; i<scoops; i++)
-                {
-                    while (true)
-                    {
-                        Console.Write($"Available Flavourrs: [{displayAvailableOption(flavourDictAvailability)}]");   //  Display available Flavours
+                        //  Check if the customer Id exist in the dictionary
+                        if (!customerDict.ContainsKey(memberId))
+                        { Console.WriteLine("Please enter a valid customer Id. Try again.\n"); continue; }
                         
-                        Console.Write($"\nEnter ice cream flavour for scoop {i + 1} : ");
-                        string flavour = Console.ReadLine().Trim().ToLower();
-
-                        //  Check for duplicate flavours
-                        bool isDuplicate = false;
-                        foreach (Flavour f in flavourList)
+                        //  Check if the customer has an existing order in queue for option 6
+                        if (forOption6)
                         {
-                            if (f.Type == flavour)
+                            if (customerDict[memberId].CurrentOrder == null)
                             {
-                                f.Quantity += 1;
-                                isDuplicate = true;
+                                Console.WriteLine("You do not have an existing order. Please choose option 4 to create an order first.\n");
+                                return 0;
                             }
                         }
-                        if (isDuplicate) { break; }
 
-                        //  Check if the string is a available flavour
-                        if (flavourDictAvailability.ContainsKey(flavour))
-                        {
-                            // Check for premium flavours
-                            bool isPremium = false;
-                            if (flavourDictAvailability[flavour] == 2)
-                            { isPremium = true; }
-
-                            flavourList.Add(new Flavour(flavour, isPremium, 1));
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Please enter a valid flavour. Try again.");
-                        }
-                            
+                        break;
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Please enter a valid customer Id in integer. Try again.");
                     }
                 }
+                return memberId;
+            }
 
-                /*  Input validation for number of toppings */
-                while (true)
-                {
-                    try
-                    {
-                        Console.Write("\nEnter number of toppings (Max 4 toppings): ");
-                        numToppings = int.Parse(Console.ReadLine().Trim());
-
-                        if(numToppings >= 0  && numToppings <= toppingDictAvailability.Count) //  Check if the number of toppings is between 0 and 4
-                        { break; }
-                        else 
-                        { Console.WriteLine("Please enter a valid number of toppings from 0 to 4. Try again."); }
-                    }
-                    catch(FormatException)
-                    {
-                        Console.WriteLine("Please enter a valid number of toppings in integer. Try again.");
-                    }       
-                }
-
-                if (numToppings == toppingDictAvailability.Count)   //  Check if the number of toppings is equal to the number of available toppings
-                {
-                    foreach (string key in toppingDictAvailability.Keys)
-                    {
-                        toppingList.Add(new Topping(key));
-                    }
-                }
-                else
-                {
-                    //  Input validation for toppings
-                    for (int i = 0; i < numToppings; i++)
-                    {
-                        while (true)
-                        {
-                            Console.Write($"Available Toppings: [{displayAvailableOption(toppingDictAvailability)}]");   //  Display available Toppings
-
-                            Console.Write($"\nEnter topping {i + 1}: ");
-                            string topping = Console.ReadLine().Trim().ToLower();
-
-                            //  Check for duplicate toppings
-                            bool isDuplicate = false;
-                            foreach (Topping t in toppingList)
-                            {
-                                if (t.Type == topping)
-                                { isDuplicate = true; }
-                            }
-                            if (isDuplicate) 
-                            {
-                                Console.WriteLine("You have already added this topping. Try again.");
-                                continue;
-                            }
-
-                            //  Check if the topping is an available topping
-                            if (toppingDictAvailability.ContainsKey(topping))
-                            {
-                                toppingList.Add(new Topping(topping));
-                                break;
-                            }
-                            else
-                            { Console.WriteLine("Please enter a valid topping. Try again."); }
-                        }
-                    }
-                }
-
+            IceCream makeiceCream(string option, int scoops, List<Flavour> flavourList, List<Topping> toppingList)
+            {                
                 /*  Creating IceCream object    */
                 IceCream iceCream = null;
                 if (option == "cup")
@@ -662,8 +535,173 @@ namespace S10257825_PRG2Assignment
                     }
                     iceCream = new Waffle(option, scoops, flavourList, toppingList, waffleFlavour); //  Create an ice cream object
                 }
-
                 return iceCream;    //  Return the ice cream object
+            }
+
+            string getOption()  /*  Input validation for options    */
+            {
+                string option;
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("\nEnter the option (Cup, Cone, Waffle): ");
+                        option = Console.ReadLine().Trim().ToLower();
+
+                        if (option != "cup" && option != "cone" && option != "waffle")  //  Check if the option is an available option
+                        {
+                            Console.WriteLine("Please enter a valid option. Try again.");
+                        }
+                        else { break; }
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Please enter a valid option (Cup, Cone, Waffle). Try again.");
+                    }
+                }
+                return option;
+            }
+
+            int getScoops() /*  Input validation for number of scoops   */
+            {
+                int scoops;
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write("\nEnter the number of scoops (Max 3 scoops): ");
+                        scoops = int.Parse(Console.ReadLine().Trim());
+
+                        if (scoops >= 1 && scoops <= 3) //  Check if the number of scoops is between 1 and 3
+                        { break; }
+                        else
+                        { Console.WriteLine("Please enter a valid number of scoops from 1 to 3. Try again."); }
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Please enter a valid number of scoops in integer. Try again.");
+                    }
+                }
+                return scoops;
+            }
+
+            string displayAvailableOption(Dictionary<string, int> dictOptions) //  Display available Flavours and Toppings
+            {
+                List<string> list = new List<string>();
+                Console.WriteLine();
+                foreach (string key in dictOptions.Keys)
+                {
+                    list.Add(key);
+                }
+                return $"{string.Join(", ", list)}";
+            }
+
+            List<Flavour> getFlavoursList(int numScoops)    /*  Input validation for flavours   */
+            {
+                List<Flavour> flavourList = new List<Flavour>();
+                for (int i = 0; i < numScoops; i++)
+                {
+                    while (true)
+                    {
+                        Console.Write($"Available Flavourrs: [{displayAvailableOption(flavourDictAvailability)}]");   //  Display available Flavours
+
+                        Console.Write($"\nEnter ice cream flavour for scoop {i + 1} : ");
+                        string flavour = Console.ReadLine().Trim().ToLower();
+
+                        //  Check if the string is a available flavour
+                        if (flavourDictAvailability.ContainsKey(flavour))
+                        {
+                            // Check for premium flavours
+                            bool isPremium = false;
+                            if (flavourDictAvailability[flavour] == 2)
+                            { isPremium = true; }
+
+                            flavourList.Add(new Flavour(flavour, isPremium));
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Please enter a valid flavour. Try again.");
+                        }
+                    }
+                }
+                return flavourList;
+            }
+
+            /*  Input validation for number of toppings */
+            int getNumToppings()
+            {
+                int numToppings;
+                while (true)
+                {
+                    try
+                    {
+                        Console.Write($"Available Toppings: [{displayAvailableOption(toppingDictAvailability)}]");   //  Display available Toppings
+
+                        Console.Write("\nEnter number of toppings (Max 4 toppings): ");
+                        numToppings = int.Parse(Console.ReadLine().Trim());
+
+                        if (numToppings >= 0 && numToppings <= toppingDictAvailability.Count) //  Check if the number of toppings is between 0 and 4
+                        { break; }
+                        else
+                        { Console.WriteLine("Please enter a valid number of toppings from 0 to 4. Try again."); }
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Please enter a valid number of toppings in integer. Try again.");
+                    }
+                }
+                return numToppings;
+            }
+
+            List<Topping> getToppingList(int numToppings)
+            {
+                List<Topping> toppingList = new List<Topping>();
+
+                if (numToppings == toppingDictAvailability.Count)   //  Check if the number of toppings is equal to the number of available toppings
+                {
+                    foreach (string key in toppingDictAvailability.Keys)
+                    {
+                        toppingList.Add(new Topping(key));
+                    }
+                }
+                else
+                {
+                    //  Input validation for toppings
+                    for (int i = 0; i < numToppings; i++)
+                    {
+                        while (true)
+                        {
+                            Console.Write($"Available Toppings: [{displayAvailableOption(toppingDictAvailability)}]");   //  Display available Toppings
+
+                            Console.Write($"\nEnter topping {i + 1}: ");
+                            string topping = Console.ReadLine().Trim().ToLower();
+
+                            //  Check for duplicate toppings
+                            bool isDuplicate = false;
+                            foreach (Topping t in toppingList)
+                            {
+                                if (t.Type == topping)
+                                { isDuplicate = true; }
+                            }
+                            if (isDuplicate)
+                            {
+                                Console.WriteLine("You have already added this topping. Try again.");
+                                continue;
+                            }
+
+                            //  Check if the topping is an available topping
+                            if (toppingDictAvailability.ContainsKey(topping))
+                            {
+                                toppingList.Add(new Topping(topping));
+                                break;
+                            }
+                            else
+                            { Console.WriteLine("Please enter a valid topping. Try again."); }
+                        }
+                    }
+                }
+                return toppingList;
             }
 
             void option5()
@@ -672,26 +710,7 @@ namespace S10257825_PRG2Assignment
                 option1();
 
                 //  Prompt user to select a customer and retrieve the selected customer
-                int memberId;
-                while (true)
-                {
-                    try
-                    {
-                        Console.Write("Enter the customer Id: ");
-                        memberId = int.Parse(Console.ReadLine().Trim());
-
-                        if (!customerDict.ContainsKey(memberId))
-                        {
-                            Console.WriteLine("Please enter a valid customer Id. Try again.");
-                            continue;
-                        }
-                        break;
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("Please enter a valid customer Id in integer. Try again.");
-                    }
-                }
+                int memberId = getMemberId(false);
 
                 //  Retrieve the order objects
                 List<Order> orderHistory = customerDict[memberId].OrderHistory;
@@ -703,62 +722,43 @@ namespace S10257825_PRG2Assignment
 
                 Console.WriteLine("--------------- Normal Queue ---------------");
                 displayOrder(normalQueue.ToArray());
-
-                Console.WriteLine();
             }
 
-            void option6()
+            
+
+            int getReply(IceCream iceCream)
             {
-                //  List the customers
-                option1();
-
-                //  Prompt user to select a customer and retrieve the selected customer
-                int memberId;
+                int reply;
                 while (true)
                 {
-                    try
+                    try     //  Input validation
                     {
-                        Console.Write("Enter the customer Id: ");
-                        memberId = int.Parse(Console.ReadLine().Trim());
-
-                        if (!customerDict.ContainsKey(memberId))
-                        {
-                            Console.WriteLine("Please enter a valid customer Id. Try again.");
-                            continue;
-                        }
-                        break;
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("Please enter a valid customer Id in integer. Try again.");
-                    }
-                }
-
-                //  Retrieve the current order objects
-                Order[] currentOrder = { customerDict[memberId].CurrentOrder };
-
-                //  List all the ice cream objects and details contained in the current order
-                
-
-                //  Prompt the user to either [1] choose an existing ice cream object to modify, [2] add an entirely new ice cream object to the order, or [3] choose an existing ice cream object to delete from the order
-                int option;
-                while (true)
-                {
-                    try
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("What would you like to do?");
-                        Console.WriteLine("[1] Modify an existing ice cream");
-                        Console.WriteLine("[2] Add a new ice cream");
-                        Console.WriteLine("[3] Delete an existing ice cream");
+                        Console.WriteLine("\n[1] Option" +
+                                            "\n[2] Scoops" +
+                                            "\n[3] Ice cream flavour" +
+                                            "\n[4] Ice cream toppings" +
+                                            "\n[5] Chcolate dipped (if applicable)" +
+                                            "\n[6] Waffle flavour (if applicable)");
                         Console.Write("Enter your option: ");
-                        option = int.Parse(Console.ReadLine().Trim());
+                        reply = int.Parse(Console.ReadLine().Trim());
 
-                        if (option < 1 || option > 3)
+                        // Check if the reply is between 1 and 6 which is the available options
+                        if (reply < 1 || reply > 6)
                         {
-                            Console.WriteLine("Please enter an option between 1 and 3. Try Again");
+                            Console.WriteLine("Please enter a value from 1 to 6. Try again.");
                             continue;
                         }
+
+                        //  Check if the option is applicable for the ice cream
+                        if (iceCream.Option == "cup" && (reply == 5 || reply == 6))
+                        { Console.WriteLine("This option is not applicable for cup. Try again."); }
+
+                        else if (iceCream.Option == "cone" && reply == 6)
+                        { Console.WriteLine("This option is not applicable for cone. Try again."); }
+
+                        else if (iceCream.Option == "waffle" && reply == 5)
+                        { Console.WriteLine("This option is not applicable for waffle. Try again."); }
+
                         break;
                     }
                     catch (FormatException)
@@ -766,15 +766,8 @@ namespace S10257825_PRG2Assignment
                         Console.WriteLine("Please enter a valid integer. try again.");
                     }
                 }
-
-                if (option == 1)
-                {
-
-                }
-
-
+                return reply;
             }
-
 
             Console.ReadLine();
         }

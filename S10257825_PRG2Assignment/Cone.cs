@@ -59,7 +59,7 @@ namespace S10257825_PRG2Assignment
                 {
                     if (f.Premium)
                     {
-                        totalPrice += 2 * f.Quantity;  //additional charge of 2 dollars if the flavour is a premium flavour durian,ube,sea salt
+                        totalPrice += 2;  //additional charge of 2 dollars if the flavour is a premium flavour durian,ube,sea salt
                     }
                 }
 
@@ -72,8 +72,8 @@ namespace S10257825_PRG2Assignment
             //tostring method for cones class
             public override string ToString()
             {
-                return $"{Option} | {Scoops} Scoops | " + base.ToString() + $" | Price : {CalculatePrice():c2}";
-                
+                if (Dipped) { return $"\t{Option}\n\t{Scoops} Scoops\n\tChocolate Dipped" + base.ToString() + $"\n\tPrice: {CalculatePrice():c2}"; }
+                else { return $"\t{Option}\n\t{Scoops} Scoop(s)" + base.ToString() + $"\n\tPrice: {CalculatePrice():c2}"; }   
             }
         }
     }

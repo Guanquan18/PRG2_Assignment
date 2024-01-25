@@ -52,43 +52,7 @@ namespace S10257825_PRG2Assignment
             }
 
             public abstract double CalculatePrice();
-            /*double totalPrice = 0;
-            if (Option == "Cup" || Option == "Cone")
-            {
-                // Calculate base price for numebr of scoops for cups and Cones
-                if (Scoops == 1)
-                {   totalPrice+= 4;   }
-
-                else if (Scoops == 2)
-                { totalPrice += 5.5; }
-
-                else if (Scoops == 3)
-                { totalPrice += 6.5; }
-            }
-            else
-            {
-                // Calculate base price for numebr of scoops for Waffles
-                if (Scoops == 1)
-                { totalPrice += 7; }
-
-                else if (Scoops == 2)
-                { totalPrice += 8.5; }
-
-                else if (Scoops == 3)
-                { totalPrice += 9.5; }
-            }
-
-            // Calculate additonal price for premium flavours
-            foreach (Flavour flavour in Flavours)
-            {
-                if (flavour.Premium)
-                {
-                    totalPrice += 2*flavour.Quantity;
-                }
-            }
-
-            // Calculate additonal price for toppings
-            totalPrice += 1*Toppings.Count();*/
+            
 
             public override string ToString()
             {
@@ -97,10 +61,8 @@ namespace S10257825_PRG2Assignment
                 {
                     toppings = "No Toppings";
                 }
-                else { toppings = $"[{toppings}]"; }
-                return $"FLavours : [{string.Join(", ",Flavours)}] | Toppings: {toppings}";
+                return $"\n\tFLavours : [{string.Join(", ",Flavours)}]\n\tToppings: [{toppings}]";
             }
-
         }
     }
 }
