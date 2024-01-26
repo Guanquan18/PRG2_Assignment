@@ -43,23 +43,38 @@ namespace S10257825_PRG2Assignment
 
             // Methods
             public void AddPoints(int points)
-            {
-                Points += points;
-            }
+            { Points += points; }
 
             public void RedeemPoints(int points)
-            {
-                Points -= points;
-            }
+            { Points -= points; }
 
             public void Punch()
             {
-                PunchCard -= 1;
+                if (PunchCard < 10) // Increment only if less than 10
+                { PunchCard += 1; }
+            }
+
+            public void ResetPunchCard()    // Reset punch card to 0
+            { PunchCard = 0; }
+
+            public void UpdateTier()
+            {
+                if (Points >= 100)
+                {
+                    Tier = "Gold";
+                }
+                else if (Points >= 50 && Tier != "Gold") // Prevents downgrade from Gold to Silver
+                {
+                    Tier = "Silver";
+                }
             }
 
             public override string ToString()
             {
-                return base.ToString() + $"Points: {Points}\nPunch Card: {PunchCard}\nTier: {Tier}";
+                return $"___________________________________" +
+                    $"\n| {"Memebrship",-10} | {"Points",-6} | {"PunchCard",-9} |" +
+                    $"\n| {Tier,-10} | {Points,-6} | {PunchCard,-9} |" +
+                    $"\n-----------------------------------\n";
             }
 
         }

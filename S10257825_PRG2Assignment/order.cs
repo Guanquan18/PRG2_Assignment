@@ -85,18 +85,20 @@ namespace S10257825_PRG2Assignment
                 string orderString;
                 if (TimeFulfilled == null)
                 {
-                    orderString = $"OrderID: {Id} | Time Received: {TimeReceived} | Time Fulfilled: Not Avaialble\n";
+                    orderString = $"OrderID: {Id} | Time Received: {TimeReceived.ToString("dd MMM yyyy, HH:mm:ss tt")} | " +
+                                    $"Time Fulfilled: Not Avaialble\n";
                 }
                 else
                 {
-                    orderString = $"OrderID: {Id} | Time Received: {TimeReceived} | Time Fulfilled: {TimeFulfilled}\n";
+                    orderString = $"OrderID: {Id} | Time Received: {TimeReceived.ToString("dd MMM yyyy, HH:mm:ss tt")} | " +
+                                    $"Time Fulfilled: {TimeFulfilled}.ToString(\"dd MMM yyyy, HH:mm:ss tt\")\n";
                 }
                 string iceCreamString = "";
                 for (int i=0; i<IceCreamList.Count; i++)
                 {
                     iceCreamString+= $"\n[{i+1}]{IceCreamList[i].ToString()}\n";
                 }
-                
+
                 return orderString+iceCreamString;
             }
         }

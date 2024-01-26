@@ -53,7 +53,6 @@ namespace S10257825_PRG2Assignment
 
             public abstract double CalculatePrice();
             
-
             public override string ToString()
             {
                 string toppings = string.Join(", ", Toppings) ;
