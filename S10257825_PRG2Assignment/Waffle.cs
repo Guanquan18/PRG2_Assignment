@@ -8,9 +8,7 @@ using System.Collections.Generic;
 
 namespace S10257825_PRG2Assignment
 {
-    internal partial class Program
-    {
-        class Waffle : IceCream
+    public class Waffle : IceCream
         {
             //fields specific to this class
             private string waffleFlavour;
@@ -74,5 +72,5 @@ namespace S10257825_PRG2Assignment
                 return $"\t{Option}\n\t{Scoops} Scoop(s)\n\tWaffle flavour: {WaffleFlavour}" + base.ToString() + $"\n\tPrice : {CalculatePrice():c2}";
             }
         }
-    }
+    
 }

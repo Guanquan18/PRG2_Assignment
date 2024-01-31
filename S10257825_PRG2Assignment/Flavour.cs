@@ -6,40 +6,38 @@
 
 namespace S10257825_PRG2Assignment
 {
-    internal partial class Program
+    public class Flavour
     {
-        class Flavour
+        //fields specific for this class (association)
+        private string type;
+        public string Type
         {
-            //fields specific for this class (association)
-            private string type;
-            public string Type
-            {
-                get { return type; }
-                set { type = value; }
-            }
+            get { return type; }
+            set { type = value; }
+        }
 
-            private bool premium;
-            public bool Premium
-            {
-                get { return premium; }
-                set { premium = value; }
-            }
+        private bool premium;
+        public bool Premium
+        {
+            get { return premium; }
+            set { premium = value; }
+        }
 
-            //unparameterised constructor 
-            public Flavour() { }
+        //unparameterised constructor 
+        public Flavour() { }
 
-            //parameterised constructor
-            public Flavour (string type, bool premium)
-            {
-                this.type = type;
-                this.premium = premium;
-            }
+        //parameterised constructor
+        public Flavour (string type, bool premium)
+        {
+            this.type = type;
+            this.premium = premium;
+        }
 
-            //tostring method
-            public override string ToString()
-            {
-                return $"{Type}";
-            }
+        //tostring method
+        public override string ToString()
+        {
+            return $"{Type}";
         }
     }
+    
 }

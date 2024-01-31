@@ -5,36 +5,33 @@
 //==========================================================
 
 namespace S10257825_PRG2Assignment
-{
-    internal partial class Program
+{ 
+    public class Topping
     {
-        class Topping
+        //regular fields 
+        private string type;
+        public string Type
         {
-            //regular fields 
-            private string type;
-            public string Type
-            {
-                get { return type; }
-                set { type = value; }
-            }
+            get { return type; }
+            set { type = value; }
+        }
 
-            //unparameterised constructor
-            public Topping ()
-            {
+        //unparameterised constructor
+        public Topping ()
+        {
 
-            }
+        }
 
-            //parameterised constructor
-            public Topping (string type)
-            {
-                this.Type = type;
-            }
+        //parameterised constructor
+        public Topping (string type)
+        {
+            this.Type = type;
+        }
 
-            //tostring method 
-            public override string ToString()
-            {
-                return $"{Type}";
-            }
+        //tostring method 
+        public override string ToString()
+        {
+            return $"{Type}";
         }
     }
 }

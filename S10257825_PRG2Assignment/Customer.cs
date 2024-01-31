@@ -9,89 +9,85 @@ using System;
 
 namespace S10257825_PRG2Assignment
 {
-    internal partial class Program
+    public class Customer
     {
-        class Customer
+        // Properties
+        private string _name;
+        private int _memberId;
+        private DateTime _dob;
+        private Order _currentOrder;
+        private List<Order> _orderHistory = new List<Order>();
+        private PointCard _rewards;
+
+        // Attributes
+        public string Name
         {
-            // Properties
-            private string _name;
-            private int _memberId;
-            private DateTime _dob;
-            private Order _currentOrder;
-            private List<Order> _orderHistory = new List<Order>();
-            private PointCard _rewards;
+            get { return _name; }
+            set { _name = value; }
+        }
 
-            // Attributes
-            public string Name
+        public int MemberId
+        {
+            get { return _memberId; }
+            set { _memberId = value; }
+        }
+
+        public DateTime Dob
+        {
+            get { return _dob; }
+            set { _dob = value; }
+        }
+
+        public Order CurrentOrder
+        {
+            get { return _currentOrder; }
+            set { _currentOrder = value; }
+        }
+        public List<Order> OrderHistory
+        {
+            get { return _orderHistory; }
+            set { _orderHistory = value; }
+        }
+
+        public PointCard Rewards
+        {
+            get { return _rewards; }
+            set { _rewards = value; }
+        }
+
+        // Constructors
+        public Customer() { }
+
+        public Customer(string name, int memberId, DateTime dob)
+        {
+            Name = name;
+            MemberId = memberId;
+            Dob = dob;
+        }
+
+        // Methods
+        public Order MakeOrder()
+        {
+            Order newOrder = new Order(10,DateTime.Now);
+            return newOrder;
+        }
+
+        public bool isBirthday()
+        {
+            DateTime today = DateTime.Now;  // Get today's date
+            if (today == Dob)
             {
-                get { return _name; }
-                set { _name = value; }
+                return true;
             }
-
-            public int MemberId
+            else
             {
-                get { return _memberId; }
-                set { _memberId = value; }
+                return false;
             }
+        }
 
-            public DateTime Dob
-            {
-                get { return _dob; }
-                set { _dob = value; }
-            }
-
-            public Order CurrentOrder
-            {
-                get { return _currentOrder; }
-                set { _currentOrder = value; }
-            }
-            public List<Order> OrderHistory
-            {
-                get { return _orderHistory; }
-                set { _orderHistory = value; }
-            }
-
-            public PointCard Rewards
-            {
-                get { return _rewards; }
-                set { _rewards = value; }
-            }
-
-            // Constructors
-            public Customer() { }
-
-            public Customer(string name, int memberId, DateTime dob)
-            {
-                Name = name;
-                MemberId = memberId;
-                Dob = dob;
-            }
-
-            // Methods
-            public Order MakeOrder()
-            {
-                Order newOrder = new Order(10,DateTime.Now);
-                return newOrder;
-            }
-
-            public bool isBirthday()
-            {
-                DateTime today = DateTime.Now;  // Get today's date
-                if (today == Dob)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            public override string ToString()
-            {
-                return $"| {MemberId,-10} | {Name,-15} | {Dob.ToString("dd/MM/yyyy"),-15} | {Rewards.Tier,-10} | {Rewards.Points,-6} | {Rewards.PunchCard,-10} |";
-            }
-
+        public override string ToString()
+        {
+            return $"| {MemberId,-10} | {Name,-15} | {Dob.ToString("dd/MM/yyyy"),-15} | {Rewards.Tier,-10} | {Rewards.Points,-6} | {Rewards.PunchCard,-10} |";
         }
     }
 }

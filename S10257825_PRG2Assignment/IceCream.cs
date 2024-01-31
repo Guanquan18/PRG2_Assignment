@@ -8,9 +8,7 @@ using System.Collections.Generic;
 
 namespace S10257825_PRG2Assignment
 {
-    internal partial class Program
-    {
-        abstract class IceCream
+    public abstract class IceCream
         {
             // Properties
             private string _option;
@@ -63,5 +61,5 @@ namespace S10257825_PRG2Assignment
                 return $"\n\tFLavours : [{string.Join(", ",Flavours)}]\n\tToppings: [{toppings}]";
             }
         }
-    }
+    
 }
