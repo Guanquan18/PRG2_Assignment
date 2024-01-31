@@ -237,7 +237,7 @@ namespace S10257825_PRG2Assignment
             else
             {
                 orderString = $"OrderID: {Id} | Time Received: {TimeReceived.ToString("dd MMM yyyy, HH:mm:ss tt")} | " +
-                                $"Time Fulfilled: {TimeFulfilled.ToString("dd MMM yyyy, HH:mm:ss tt")}\n";
+                                $"Time Fulfilled: {((DateTime)TimeFulfilled).ToString("dd MMM yyyy, HH:mm:ss tt")}\n";
             }
             string iceCreamString = "";
             for (int i=0; i<IceCreamList.Count; i++)

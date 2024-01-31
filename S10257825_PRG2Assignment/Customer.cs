@@ -74,8 +74,11 @@ namespace S10257825_PRG2Assignment
 
         public bool isBirthday()
         {
-            DateTime today = DateTime.Now;  // Get today's date
-            if (today == Dob)
+            int year = DateTime.Now.Year;
+            int month = DateTime.Now.Month;
+            int day = DateTime.Now.Day;
+            
+            if (year == Dob.Year && month == Dob.Month && day == Dob.Day)
             {
                 return true;
             }

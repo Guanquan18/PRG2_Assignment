@@ -6,6 +6,7 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace S10257825_PRG2Assignment
 {
@@ -27,11 +28,11 @@ namespace S10257825_PRG2Assignment
                 int memberId = Convert.ToInt32(info[1]);
                 DateTime dob = Convert.ToDateTime(info[2]);
                 string membershipStatus = info[3];
-                int membershipPoints = Convert.ToInt32(info[4]);
+                int membershipPoints = 400;//Convert.ToInt32(info[4]);
                 int punchCard = Convert.ToInt32(info[5]);
 
                 // Create a customer object (makes use of the parameterised constructor in the customer class)
-                Customer customer = new Customer(info[0], Convert.ToInt32(info[1]), Convert.ToDateTime(info[2]));
+                Customer customer = new Customer(info[0], memberId, DateTime.Now);
 
                 // Add associated information(rewards) to the customer object as it is associated with the customer class
                 customer.Rewards = new PointCard(membershipPoints, punchCard)  //same customer object and uses the point card class' parameterised constructor which takes in the membership points and punchcard
@@ -172,109 +173,9 @@ namespace S10257825_PRG2Assignment
 
             InitialiseHistory(customerDict);  //  Initialise customers Object and Order 
 
-            /*foreach (KeyValuePair<int, Customer> kvp in customerDict)
-            {
-                Customer customer = kvp.Value;
-                Console.WriteLine("-------------------------------------------------------------------------------------");
-                Console.WriteLine(customer.ToString());
-                foreach (Order order in customer.OrderHistory)
-                {
-                    Console.WriteLine(order.ToString());
-                    for ( int j = 0; j<order.IceCreamList.Count; j++ )
-                    {
-                        Console.WriteLine($"{j+1}. " + order.IceCreamList[j].ToString());
-                    }
-                    Console.WriteLine();
-                }
-            }*/
-
-            /*List all customers
-             display the information of all the customers
-            2) List all current orders
-             display the information of all current orders in both the gold members and regular queue
-            3) Register a new customer
-             prompt user for the following information for the customer: name, id number, date of birth
-             create a customer object with the information given
-             create a Pointcard object
-             assign Pointcard object to the customer
-             append the customer information to the customers.csv file
-             display a message to indicate registration status
-            4) Create a customer’s order
-             list the customers from the customers.csv
-             prompt user to select a customer and retrieve the selected customer
-             create an order object
-             prompt user to enter their ice cream order (option, scoops, flavours, toppings)
-             create the proper ice cream object with the information given
-             add the ice cream object to the order
-             prompt the user asking if they would like to add another ice cream to the order, repeating
-            the previous three steps if [Y] or continuing to the next step if [N]
-             link the new order to the customer’s current order
-             if the customer has a gold-tier Pointcard, append their order to the back of the gold
-            members order queue. Otherwise append the order to the back of the regular order queue
-             display a message to indicate order has been made successfully
-            Year 2023/24 Assignment - 6 -
-            PRG2 (IT, CSF, DS) Last Update: 05/01/2023
-             Official Open
-            5) Display order details of a customer
-             list the customers
-             prompt user to select a customer and retrieve the selected customer
-             retrieve all the order objects of the customer, past and current
-             for each order, display all the details of the order including datetime received, datetime
-            fulfilled (if applicable) and all ice cream details associated with the order
-            6) Modify order details
-             list the customers
-             prompt user to select a customer and retrieve the selected customer’s current order
-             list all the ice cream objects contained in the order
-             prompt the user to either [1] choose an existing ice cream object to modify, [2] add an
-            entirely new ice cream object to the order, or [3] choose an existing ice cream object to
-            delete from the order
-            o if [1] is selected, have the user select which ice cream to modify then prompt the user
-            for the new information for the modifications they wish to make to the ice cream
-            selected: option, scoops, flavours, toppings, dipped cone (if applicable), waffle flavour
-            (if applicable) and update the ice cream object’s info accordingly
-            o if [2] is selected prompt the user for all the required info to create a new ice cream
-            object and add it to the order
-            o if [3] is selected, have the user select which ice cream to delete then remove that ice
-            cream object from the order. But if this is the only ice cream in the order, then simply
-            display a message saying they
-            4. ADVANCED FEATURES – 20% INDIVIDUAL
-            (a) Process an order and checkout
-             dequeue the first order in the queue
-             display all the ice creams in the order
-             display the total bill amount
-             display the membership status & points of the customer
-             check if it is the customer’s birthday, and if it is, calculate the final bill while having the
-            most expensive ice cream in the order cost $0.00
-             check if the customer has completed their punch card. If so, then calculate the final bill
-            while having the first ice cream in their order cost $0.00 and reset their punch card back
-            to 0
-             check Pointcard status to determine if the customer can redeem points. If they cannot,
-            skip to displaying the final bill amount
-            Year 2023/24 Assignment - 7 -
-            PRG2 (IT, CSF, DS) Last Update: 05/01/2023
-             Official Open
-             if the customer is silver tier or above, prompt user asking how many of their points they
-            want to use to offset their final bill
-             redeem points, if necessary
-             display the final total bill amount
-             prompt user to press any key to make payment
-             increment the punch card for every ice cream in the order (if it goes above 10 just set it
-            back down to 10)
-             earn points
-             while earning points, upgrade the member status accordingly
-             mark the order as fulfilled with the current datetime
-             add this fulfilled order object to the customer’s order history
-            Display monthly charged amounts breakdown & total charged amounts for the year
-             prompt the user for the year
-             retrieve all order objects that were successfully fulfilled within the inputted year
-             compute and display the monthly charged amounts breakdown & the total charged
-            amounts for the input year
-            */
-
             //  Create a queue for 2 type of membership
             Queue<Order> goldQueue = new Queue<Order>();
             Queue<Order> normalQueue = new Queue<Order>();
-
 
             displayMenu(customerDict, goldQueue, normalQueue);
 
@@ -298,15 +199,15 @@ namespace S10257825_PRG2Assignment
                                         "\n[4] Create a customer's order" +
                                         "\n[5] Display order details of a customer" +
                                         "\n[6] Modify order details" +
-                                        "\n[0] Exit program" +
                                         "\n[7] Process an order and checkout" +
                                         "\n[8] Display monthly charged amounts breakdown & total charged amounts for the year" +
+                                        "\n[0] Exit program" +
                                         "\n============================================================================================");
 
                         Console.Write("Enter your option: ");
                         option = int.Parse(Console.ReadLine().Trim());
 
-                        if (option < 0 || option > 7)   //  Check if the option is between 0 and 8
+                        if (option < 0 || option > 8)   //  Check if the option is between 0 and 8
                         {
                             Console.WriteLine("Please enter an option between 0 and 8. Try Again\n");
                             continue;
@@ -397,13 +298,16 @@ namespace S10257825_PRG2Assignment
                 {
                     Console.Write("Enter customer Date of Birth in this format (dd/MM/yyyy): ");
                     dob = DateTime.Parse(Console.ReadLine().Trim());  //using trim ensure white spaces that arise from the space bar doesnt cause an erorr in the program
-                    break;
+
+                    if (dob > DateTime.Now) //  Check if the date of birth is in the future
+                    {
+                        Console.WriteLine("Please enter a valid Date of Birth. Try again.");
+                        continue;
+                    }
+                    else { break; }
                 }
                 catch (FormatException)
-                {
-                    Console.WriteLine("Please enter a valid Date of Birth in this format (dd/MM/yyyy). Try again.");
-                    continue;
-                }
+                { Console.WriteLine("Please enter a valid Date of Birth in this format (dd/MM/yyyy). Try again."); }
             }
 
             //  Create new customer object
@@ -947,16 +851,7 @@ namespace S10257825_PRG2Assignment
             Console.WriteLine("--------------------------------------------");
 
             //  Calculate the total bill amount
-            double totalAmount = 0;
-            double mostExpensive = 0;
-            foreach (IceCream iceCream in currentOrder.IceCreamList)
-            {
-                if (iceCream.CalculatePrice() > mostExpensive)  // Find the most expensive ice cream
-                {
-                    mostExpensive = iceCream.CalculatePrice();
-                }
-                totalAmount += iceCream.CalculatePrice();
-            }
+            double totalAmount = currentOrder.CalculateTotal();
 
             Console.WriteLine($"Total amount: {totalAmount:c2}"); //  Display the total bill amount
 
@@ -974,9 +869,19 @@ namespace S10257825_PRG2Assignment
             //  Display the membership status & points of the customer
             Console.WriteLine($"\n{currentCustomer.Rewards.ToString()}");
 
+            double mostExpensive = 0;
             /*  Check if it is the customer’s birthday  */
+            bool birthday = currentCustomer.isBirthday();
             if (currentCustomer.isBirthday())
             {
+                //  Check if the most expensive ice cream is the first ice cream
+                foreach (IceCream iceCream in currentOrder.IceCreamList)
+                {
+                    if (iceCream.CalculatePrice() > mostExpensive)
+                    {
+                        mostExpensive = iceCream.CalculatePrice();
+                    }
+                }
                 totalAmount -= mostExpensive; // Remove the most expensive icecream from the total bill
                 Console.WriteLine($"It is your birthday. You get the most expensive ice cream for free!!!!\n");
             }
@@ -985,12 +890,23 @@ namespace S10257825_PRG2Assignment
             PointCard card = currentCustomer.Rewards;
             if (card.PunchCard == 10)
             {
-                //  Check if the most expensive ice cream is the first ice cream
-                if (currentOrder.IceCreamList[0].CalculatePrice() == mostExpensive)
-                { totalAmount -= currentOrder.IceCreamList[1].CalculatePrice(); } // Remove the second icecream from the total amount
+                /*if (!currentCustomer.isBirthday() && currentOrder.IceCreamList.Count == 1)
+                {
+                    Console.WriteLine("Since it is your birthday.\n");
+                }
+                //  Check if the most expensive ice cream is the first ice cream and if there is more than 1 ice cream in the order
+                else if (currentCustomer.isBirthday() && currentOrder.IceCreamList[0].CalculatePrice() == mostExpensive && currentOrder.IceCreamList.Count !=1)
+                { 
+                    totalAmount -= currentOrder.IceCreamList[1].CalculatePrice();   // Remove the second icecream from the total amount
+                    Console.WriteLine($"Since it's your birthday and your punch card has reach 10, you get the second ice cream for free too!!!!\n"); 
+                }
+                else if (currentCustomer.isBirthday() && currentOrder.IceCreamList[0].CalculatePrice() != mostExpensive && currentOrder.IceCreamList.Count != 1)
+                {
 
-                else
-                { totalAmount -= currentOrder.IceCreamList[0].CalculatePrice(); } // Remove the first icecream from the total amount
+                }
+                else*/
+                
+                 totalAmount -= currentOrder.IceCreamList[0].CalculatePrice(); // Remove the first icecream from the total amount
 
                 Console.WriteLine("Your punch card has reach 10. You will get the first ice cream in your order for free!!!\n");
                 card.ResetPunchCard(); //  Reset the punch card
@@ -999,30 +915,42 @@ namespace S10257825_PRG2Assignment
             /*  Check Pointcard status to determine if the customer can redeem points   */
             if (currentCustomer.Rewards.Tier != "Ordinary" && currentCustomer.Rewards.Points != 0)
             {
-                int points;
-                do
-                {   //  Prompt user to enter the number of points to offset the bill
-                    try
-                    {
-                        Console.Write($"How many points do you want to redeem (1 point = $0.02): ");
-                        points = int.Parse(Console.ReadLine().Trim());
-
-                        //  Check if the points is more than the points the customer has
-                        if (points > currentCustomer.Rewards.Points)
+                // Check if the final amount is 0
+                if (totalAmount == 0)
+                {
+                    Console.WriteLine("You cannot redeem bacause your final bill is $0.00.");
+                }
+                else
+                {
+                    int points;
+                    do
+                    {   //  Prompt user to enter the number of points to offset the bill
+                        try
                         {
-                            Console.WriteLine($"Unable to redeem {points} because you only have {currentCustomer.Rewards.Points} points.\n");
-                        }
-                        else { break; }
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("Please enter a valid integer.\n");
-                    }
-                } while (true);
+                            Console.Write($"How many points do you want to redeem? max is {totalAmount / 0.02} points (1 point = $0.02)?: ");
+                            points = int.Parse(Console.ReadLine().Trim());
 
-                //  Redeem points
-                card.RedeemPoints(points);
-                totalAmount -= points * 0.02;
+                            //  Check if the points is more than the points the customer has
+                            if (points > currentCustomer.Rewards.Points)
+                            {
+                                Console.WriteLine($"Unable to redeem {points} points because you only have {currentCustomer.Rewards.Points} points.\n");
+                            }
+                            else if (points > totalAmount / 0.02) //  Check if the points redemned is more than the final bill
+                            {
+                                Console.WriteLine($"Unable to redeem more than {totalAmount / 0.02} points to offset ur final bill \n");
+                            }
+                            else { break; }
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("Please enter a valid integer.\n");
+                        }
+                    } while (true);
+
+                    //  Redeem points
+                    card.RedeemPoints(points);
+                    totalAmount -= points * 0.02;
+                }
             }
 
             Console.WriteLine($"Final amount after deduction: {totalAmount:c2}\n");   //  Display the final total amount after deduction
