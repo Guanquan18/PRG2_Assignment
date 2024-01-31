@@ -19,10 +19,10 @@ namespace S10257825_PRG2Assignment
         {
             /*  Read customers.csv file */
             string[] csvLines = File.ReadAllLines("customers.csv");
-            for (int i = 1; i < csvLines.Length; i++)
+            for (int i = 1; i < csvLines.Length; i++)  //does read the header line but only the neccessary values
             {
                 string[] info = csvLines[i].Split(',');
-
+                //assign each part of the csv file to variables name, memberId, dob, membershipstatus, membershipPoints and punchcard in appropriate data types
                 string name = info[0];
                 int memberId = Convert.ToInt32(info[1]);
                 DateTime dob = Convert.ToDateTime(info[2]);
@@ -30,25 +30,25 @@ namespace S10257825_PRG2Assignment
                 int membershipPoints = Convert.ToInt32(info[4]);
                 int punchCard = Convert.ToInt32(info[5]);
 
-                // Create a customer object
+                // Create a customer object (makes use of the parameterised constructor in the customer class)
                 Customer customer = new Customer(info[0], Convert.ToInt32(info[1]), Convert.ToDateTime(info[2]));
 
-                // Add associated information(rewards) to the customer object 
-                customer.Rewards = new PointCard(membershipPoints, punchCard)
+                // Add associated information(rewards) to the customer object as it is associated with the customer class
+                customer.Rewards = new PointCard(membershipPoints, punchCard)  //same customer object and uses the point card class' parameterised constructor which takes in the membership points and punchcard
                 {
-                    Tier = membershipStatus
+                    Tier = membershipStatus  //the tier is a string that indicates what status each customer is (gold/silver/ordinary)
                 };
 
-                // Add the customer object to the collection
+                // Add the customer object to the collection customerDict which was initialised in line 38 customer.MemberId makes use of the public value of the id which is int as key
                 customerDict.Add(customer.MemberId, customer);
             }
 
             /*  Read orders.csv file    */
             csvLines = File.ReadAllLines("orders.csv");
-            for (int i = 1; i < csvLines.Length; i++)
+            for (int i = 1; i < csvLines.Length; i++)  //skips header of the orders.csv file
             {
                 string[] info = csvLines[i].Split(',');
-
+                //assign each part of the csv file into appropriate variables and data types (look at the association with ice cream class)
                 int orderId = Convert.ToInt32(info[0]);
                 int memberId = Convert.ToInt32(info[1]);
                 DateTime timeReceived = Convert.ToDateTime(info[2]);
@@ -66,7 +66,7 @@ namespace S10257825_PRG2Assignment
                 //  topping3 = info[13];
                 //  topping4 = info[14];
 
-                // Create a temperary list for flavours
+                // Create a temporary list for flavours
                 List<Flavour> flavourList = new List<Flavour>();
                 List<Topping> toppingList = new List<Topping>();
 
@@ -77,10 +77,10 @@ namespace S10257825_PRG2Assignment
                     if (flavourDictAvailability.ContainsKey(info[j].ToLower()))
                     {
                         string flavour = info[j].ToLower();
-                        bool isPremium = false;
+                        bool isPremium = false;  //initialise isPremium variable as false first before iterating thrugh the dictionary
                         bool isDuplicate = false;
 
-                        // Check for premium flavours
+                        // Check for premium flavours from the contents of the csv file where the premium flavours ube, sea salt and durian cost 2 dollars 
                         int cost = flavourDictAvailability[flavour];
                         if (cost == 2)
                         { isPremium = true; }
@@ -100,22 +100,22 @@ namespace S10257825_PRG2Assignment
                 }
 
                 /*  Creating IceCream object    */
-
-                IceCream iceCream = null;
+                  
+                IceCream iceCream = null;  //initialise ice cream object as null first
 
                 if (option == "Cup")
                 {
-                    iceCream = new Cup(option, scoops, flavourList, toppingList);
+                    iceCream = new Cup(option, scoops, flavourList, toppingList);  //if the option is a cup then call in the parameterised constructor of the Cup class and pass in the variables to suit 
                 }
                 else if (option == "Cone")
                 {
                     bool dipped = Convert.ToBoolean(info[6].ToLower());
-                    iceCream = new Cone(option, scoops, flavourList, toppingList, dipped);
+                    iceCream = new Cone(option, scoops, flavourList, toppingList, dipped);  //if the option is a cone then call in the paramterised constructor for cone and pass in values
                 }
                 else if (option == "Waffle")
                 {
                     string waffleFlavour = info[7];
-                    iceCream = new Waffle(option, scoops, flavourList, toppingList, waffleFlavour);
+                    iceCream = new Waffle(option, scoops, flavourList, toppingList, waffleFlavour);  //if the option is a waffle then call in the parameterised constructor for the waffle and pass in values
                 }
 
                 /*  creating Order objects  */
@@ -123,10 +123,10 @@ namespace S10257825_PRG2Assignment
                 List<Order> orderHistoryList = customerDict[memberId].OrderHistory; //  Get the order history list from the customer object
 
                 //  Check if there if the ice cream is from the same existing order
-                bool isDuplicateOrder = false;
+                bool isDuplicateOrder = false;  //initialise as being non existing first 
                 foreach (Order order in orderHistoryList)
                 {
-                    if (order.Id == orderId)
+                    if (order.Id == orderId)  //check if the order id matches the one from the csv file 
                     {
                         order.AddIceCream(iceCream);    //  Add the ice cream object IceCreamList using class method
                         isDuplicateOrder = true;
@@ -134,12 +134,12 @@ namespace S10257825_PRG2Assignment
                     }
                 }
 
-                if (!isDuplicateOrder)
+                if (!isDuplicateOrder)  //if the order is NOT an existing order, create a new order hence being not duplicate
                 {
                     //  Create a new order object
-                    Order order = new Order(orderId, timeReceived)
+                    Order order = new Order(orderId, timeReceived)  //call in the parameterised constructor for the order class and pass in the appropriate values to create the object    
                     {
-                        TimeFulfilled = timeFulfilled
+                        TimeFulfilled = timeFulfilled  //assign the public variable with the new value upon creating order
                     };
                     order.AddIceCream(iceCream);    //  Add the ice cream object IceCreamList using class method
 
@@ -150,14 +150,14 @@ namespace S10257825_PRG2Assignment
         }
         public static void Main(string[] args)
         {
-            // Read flavours.csv file
+            // Read flavours.csv and toppings.csv file and add it to the initialised dictionary where the flavour is the key and the cost is the value
             ReadFlavoursToppingsFiles(flavourDictAvailability, "flavours.csv");
             ReadFlavoursToppingsFiles(toppingDictAvailability, "toppings.csv");
-
+            //method to read csv files by passing in the created dictionary and csv file name as a string (flavours and toppings csv file can be passed in cuz the pattern is the same)
             void ReadFlavoursToppingsFiles(Dictionary<string, int> dict, string path)
             {
                 string[] csvLines = File.ReadAllLines(path);
-                for (int i = 1; i < csvLines.Length; i++)
+                for (int i = 1; i < csvLines.Length; i++)  //reads the total length of the file excluding the headers
                 {
                     string[] info = csvLines[i].Split(',');
                     int cost = (int)double.Parse(info[1]); // Convert string to double then to int to remove decimal points
@@ -167,7 +167,7 @@ namespace S10257825_PRG2Assignment
                 }
             }
 
-            // Declare a Dictionary for customer objects
+            // Declare a Dictionary for customer objects using their ID as the key
             Dictionary<int, Customer> customerDict = new Dictionary<int, Customer>();
 
             InitialiseHistory(customerDict);  //  Initialise customers Object and Order 
@@ -280,8 +280,8 @@ namespace S10257825_PRG2Assignment
 
             Console.ReadLine();
         }
-
-        public static void displayMenu(Dictionary<int, Customer> customerDict, Queue<Order> goldQueue, Queue<Order> normalQueue)
+        //pass in all the possible collections needed for every option from 1 to 8
+        public static void displayMenu(Dictionary<int, Customer> customerDict, Queue<Order> goldQueue, Queue<Order> normalQueue)  
         {
             while (true)
             {
@@ -331,7 +331,7 @@ namespace S10257825_PRG2Assignment
                 else if (option == 5) { option5(customerDict); }
                 else if (option == 6) { option6(customerDict); }
                 else if (option == 7) { option7(customerDict, goldQueue, normalQueue); }
-                else { option8(customerDict); }
+                else if (option == 8) { option8(customerDict); }
             }
         }
         public static void option1(Dictionary<int, Customer> customerDict)
@@ -339,10 +339,10 @@ namespace S10257825_PRG2Assignment
             Console.WriteLine("\n=====================================================================================" +
                            $"\n| {"Member ID",-10} | {"Name",-15} | {"Date of Birth",-15} | {"Membership",-10} | {"Points",-6} | {"PunchCard",-10} |" +
                            $"\n|============|=================|=================|============|========|============|");
-            foreach (KeyValuePair<int, Customer> kvp in customerDict)
+            foreach (KeyValuePair<int, Customer> kvp in customerDict)  //go through the customerDict which was created with the customer objects in line 65 where the ID is the key
             {
-                Customer customer = kvp.Value;
-                Console.WriteLine(customer.ToString());
+                Customer customer = kvp.Value;  
+                Console.WriteLine(customer.ToString());  //tostring method that was implemented in the customer class
             }
             Console.WriteLine("=====================================================================================\n");
         }
@@ -358,7 +358,7 @@ namespace S10257825_PRG2Assignment
             Console.WriteLine();
         }
 
-        public static void displayOrder(Order[] orderArray)
+        public static void displayOrder(Order[] orderArray)  //method for option 2 and takes in the order objects
         {
             Console.WriteLine();
             if (orderArray.Length != 0) //  Check if the queue taken is empty
@@ -382,23 +382,23 @@ namespace S10257825_PRG2Assignment
         
         public static void option3(Dictionary<int, Customer> customerDict)
         {
-            // Declare variables
+            // Declare variables which is needed in order to create a new customer object based on the customer class constructor
             string name;
             int memberId;
             DateTime dob = DateTime.Now;
 
             Console.Write("Enter customer name: ");
-            name = Console.ReadLine();  // Get customer name
+            name = Console.ReadLine();  // Get customer name from user input
 
-            memberId = getMemberId(true, customerDict);   //  Get customer Id
+            memberId = getMemberId(true, customerDict);   //  Get customer Id using the getMemberId method in line 494
 
-            while (true)    // Get customer Date of Birth
+            while (true)    // only carries onto the next step of asking for user DOB is the memberId is inputed correctly which results in the condition being true
             {
                 //  Validate user inputs for Date of Birth
                 try
                 {
                     Console.Write("Enter customer Date of Birth in this format (dd/MM/yyyy): ");
-                    dob = DateTime.Parse(Console.ReadLine().Trim());
+                    dob = DateTime.Parse(Console.ReadLine().Trim());  //using trim ensure white spaces that arise from the space bar doesnt cause an erorr in the program
                     break;
                 }
                 catch (FormatException)
@@ -412,15 +412,15 @@ namespace S10257825_PRG2Assignment
             Customer newCustomer = new Customer(name, memberId, dob);
 
             //  Create new PointCard object
-            PointCard newPointCard = new PointCard(0, 0)
+            PointCard newPointCard = new PointCard(0, 0)  //call in pointcard constructor and pass in necessary values for new customer object
             {
-                Tier = "Ordinary"
+                Tier = "Ordinary"  //initial tier level for newly registered customers will be ordinary and points will be 0 too
             };
 
             //  Add PointCard object to the customer object
-            newCustomer.Rewards = newPointCard;
+            newCustomer.Rewards = newPointCard;  //the association between pointcard and rewards, makes use of the public value
 
-            //  Add the customer object to the dictionary
+            //  Add the customer object to the dictionary which was created to store all customer objects
             customerDict.Add(newCustomer.MemberId, newCustomer);
 
             //  Append the customer information to the customers.csv file
@@ -428,41 +428,41 @@ namespace S10257825_PRG2Assignment
             {
                 sw.WriteLine($"{newCustomer.Name},{newCustomer.MemberId},{newCustomer.Dob},{newCustomer.Rewards.Tier},{newCustomer.Rewards.Points},{newCustomer.Rewards.PunchCard}");
             }
-            Console.WriteLine("Registration is successful.\n");
+            Console.WriteLine("Registration is successful.\n");  //the message that appears once all condition is met and new customer object as well as pointcard object is created succesfully
         }
         
         public static void option4(Dictionary<int, Customer> customerDict, Queue<Order> goldQueue, Queue<Order> normalQueue)
         {
-            //  List the customers
+            //  List out the existing customers in the system
             option1(customerDict);
 
-            //  Prompt user to select a customer and retrieve the selected customer
+            //  Prompt user to select a customer and retrieve the selected customer by inputing the ID number which is shown on the list
             int memberId = getMemberId(false, customerDict);
 
-            //  Retrieve the customer object
+            //  Retrieve the customer object based on the customerId user inputs
             Customer customer = customerDict[memberId];
 
-            //  Check for existing order
+            //  Check for existing order by accessing the current order public variable in the customer object
             if (customer.CurrentOrder != null)
             {
                 Console.WriteLine("You have an existing order. Please choose option 6 to modify your order\n");
                 return;
             }
 
-            Order newOrder = customer.MakeOrder();  //  Create an empty order object for CurrentOrder inside the customer object
+            Order newOrder = customer.MakeOrder();  //  MakeOrder method which is associated with the order class to Create an empty order object for CurrentOrder inside the customer object
 
             bool repeat = false;
             do
             {
                 //  Prompt user to enter their ice cream order (option, scoops, flavours, toppings)
-                string option = getOption();
-                int scoops = getScoops();
-                List<Flavour> flavourList = getFlavoursList(scoops);
-                int numToppings = getNumToppings();
-                List<Topping> toppingList = getToppingList(numToppings);
+                string option = getOption();  //method to ensure input validation in line 554
+                int scoops = getScoops();  //method to ensure input validation in line 578
+                List<Flavour> flavourList = getFlavoursList(scoops);  //method to ensure input validation in line 612
+                int numToppings = getNumToppings();  //method to ensure input validation in line 656
+                List<Topping> toppingList = getToppingList(numToppings);  //method to ensure input validation in line 681
 
                 //  Create IceCream Object and it to the list Add the ice cream list to the order object
-                newOrder.AddIceCream(makeIceCream(option, scoops, flavourList, toppingList));
+                newOrder.AddIceCream(makeIceCream(option, scoops, flavourList, toppingList));  //makes use of method in line 60 of the order class to add to the list and method in line 533
 
                 // Ask if the user would like to add another ice cream to the order
                 while (true)
@@ -480,12 +480,12 @@ namespace S10257825_PRG2Assignment
 
             } while (repeat);
 
-            customer.CurrentOrder = newOrder;   //  Add the order object to the customer object
+            customer.CurrentOrder = newOrder;   //Add the order object to the customer object under the CurrentOrder variable which is associated with order class
 
             if (customer.Rewards.Tier == "Gold")
-            { goldQueue.Enqueue(newOrder); }    //  Add the order object to the gold queue
+            { goldQueue.Enqueue(newOrder); }    //Add the order object to the gold queue
             else
-            { normalQueue.Enqueue(newOrder); }  //  Add the order object to the normal queue
+            { normalQueue.Enqueue(newOrder); }  //Add the order object to the normal queue
 
             Console.WriteLine("\nOrder has been made successfully.\n");
         }
@@ -561,7 +561,7 @@ namespace S10257825_PRG2Assignment
                     Console.Write("\nEnter the option (Cup, Cone, Waffle): ");
                     option = Console.ReadLine().Trim().ToLower();
 
-                    if (option != "cup" && option != "cone" && option != "waffle")  //  Check if the option is an available option
+                    if (option != "cup" && option != "cone" && option != "waffle")  //to check if the user inputs an option that is not offered
                     {
                         Console.WriteLine("Please enter a valid option.");
                     }
