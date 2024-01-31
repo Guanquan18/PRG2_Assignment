@@ -1010,20 +1010,23 @@ namespace S10257825_PRG2Assignment
                 {
                     Console.Write("Enter a year between 2010 and 2024: ");  //prompt the user for the year
                     string year = Console.ReadLine();  //takes in the user input as a string
-                    if (int.TryParse(year, out int yearx) && yearx >= 2010 && yearx <= 2024)  //compares the user's input and checks if it falls within the specified range and comtinues if it does 
+                    if (int.TryParse(year, out int yearx) && yearx >= 2010 && yearx <= 2024)  //compares the user's input and checks if it is a valid integer with the try parse method and if it falls within the specified range and comtinues if it does 
                     {
                         double yearlyIncome = 0;  //initialise a new variable yearly total as 0
-                        List<double> monthlyIncome = Enumerable.Repeat(0.0, 12).ToList();  //create a list that generates a sequence which repeats 0.0 12 times (windows documentation)
-
+                        List<double> monthlyIncome = new List<double>();  //create a list to store monthly income values with double being the data type
+                        for (int i = 0; i < 12; i++)  //loops through the list 12 times to obtain the income of 12 months
+                        {
+                            monthlyIncome.Add(0.0);  //initialise as 0 for every month first as the next loops will add values from completed orders 
+                        }
                         foreach (var customer in customerDict.Values)  //iterate through every customer object in the dictionary created above
                         {
-                            foreach (var order in customer.OrderHistory)  //interates through the order history of each customer 
+                            foreach (var order in customer.OrderHistory)  //interates through the order history of each customer accessing it through the customer class
                             {
-                                if (order.TimeFulfilled != null && order.TimeFulfilled.Value.Year == yearx)  //checks for fulfilled orders only 
+                                if (order.TimeFulfilled != null && order.TimeFulfilled.Value.Year == yearx)  //checks for fulfilled orders only through the association with Order class
                                 {
-                                    double orderTotal = order.CalculateTotal();
-                                    monthlyIncome[order.TimeFulfilled.Value.Month - 1] += orderTotal; //use the -1 here as an array starts with the index of 0 and in order to obtain 12 for 12 months it has to be an index of 11
-                                    yearlyIncome += orderTotal;
+                                    double orderTotal = order.CalculateTotal();  //the order total here uses the calculate total method from the order class to calculate completed orders
+                                    monthlyIncome[order.TimeFulfilled.Value.Month - 1] += orderTotal; //use the -1 here to iterate through 12 months as indexing in lists start from 0 to get monthly income from month 1 to 12 in the list 
+                                    yearlyIncome += orderTotal;  //create a new variable to store the values from each month to be then used to add up into the yearly income
                                 }
                             }
                         }
