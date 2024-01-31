@@ -89,7 +89,7 @@ namespace S10257825_PRG2Assignment
 
             public override string ToString()
             {
-                return $"| {MemberId,-10} | {Name,-15} | {Dob.ToString("dd/MM/yyyy"),-15} | {Rewards.Tier,-10} | {Rewards.Points,-6} |";
+                return $"| {MemberId,-10} | {Name,-15} | {Dob.ToString("dd/MM/yyyy"),-15} | {Rewards.Tier,-10} | {Rewards.Points,-6} | {Rewards.PunchCard,-10} |";
             }
 
         }

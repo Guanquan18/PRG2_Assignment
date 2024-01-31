@@ -181,7 +181,7 @@ namespace S10257825_PRG2Assignment
                         try
                         {
                             //  Input validation
-                            Console.WriteLine("------------------------------ Welcome to Our Ice Cream Store ------------------------------" +
+                            Console.WriteLine("============================== Welcome to Our Ice Cream Store ==============================" +
                                             "\n[1] List all customers" +
                                             "\n[2] List all current orders" +
                                             "\n[3] Register a new customer" +
@@ -191,7 +191,8 @@ namespace S10257825_PRG2Assignment
                                             "\n[0] Exit program" +
                                             "\n[7] Process an order and checkout" +
                                             "\n[8] Display monthly charged amounts breakdown & total charged amounts for the year" +
-                                            "\n--------------------------------------------------------------------------------------------");
+                                            "\n============================================================================================");
+                                               
                             Console.Write("Enter your option: ");
                             option = int.Parse(Console.ReadLine().Trim());
 
@@ -227,16 +228,16 @@ namespace S10257825_PRG2Assignment
             displayMenu();
 
             void option1()
-            {
-                Console.WriteLine("\n________________________________________________________________________" +
-                               $"\n| {"Member ID",-10} | {"Name",-15} | {"Date of Birth",-15} | {"Membership",-10} | {"Points",-6} |" +
-                               $"\n|------------|-----------------|-----------------|------------|--------|");
-                foreach (KeyValuePair<int, Customer> kvp in customerDict)  //go through the customerDict which was created with the customer objects in line 65 where the ID is the key
+            {                        
+                Console.WriteLine("\n=====================================================================================" +
+                               $"\n| {"Member ID",-10} | {"Name",-15} | {"Date of Birth",-15} | {"Membership",-10} | {"Points",-6} | {"PunchCard",-10} |" +
+                               $"\n|============|=================|=================|============|========|============|");
+                foreach (KeyValuePair<int, Customer> kvp in customerDict)
                 {
                     Customer customer = kvp.Value;
                     Console.WriteLine(customer.ToString());  //tostring method that was implemented in the customer class
                 }
-                Console.WriteLine("------------------------------------------------------------------------\n");
+                Console.WriteLine("=====================================================================================\n");
             }
 
             void option2()
@@ -253,17 +254,23 @@ namespace S10257825_PRG2Assignment
             void displayOrder(Order[] orderArray)  //method for option 2 and takes in the order objects
             {
                 Console.WriteLine();
-                if (orderArray.Length != 0) //  Check if the queue taken in is empty
+                if (orderArray.Length != 0) //  Check if the queue taken is empty
                 {
                     foreach (Order order in orderArray)
                     {
-                        Console.WriteLine(order.ToString());
+                        if (order != null) //  Check if the order object is null
+                        {
+                            Console.WriteLine(order.ToString());
+                        }
+                        else 
+                        { 
+                            Console.WriteLine("There is no order here.\n");
+                            break; 
+                        }
                     }
                 }
                 else
-                {
-                    Console.WriteLine("There is no order here.\n");
-                }
+                { Console.WriteLine("There is no order here.\n"); }
             }
 
             void option3()
@@ -347,8 +354,8 @@ namespace S10257825_PRG2Assignment
                     int numToppings = getNumToppings();  //method to ensure input validation in line 539
                     List<Topping> toppingList = getToppingList(numToppings);  //method to ensure input validation in line 564
 
-                    //  Create IceCream Object and Add the ice cream list to the order object
-                    newOrder.AddIceCream(makeiceCream(option, scoops, flavourList, toppingList));  //makes use of method in line 60 of the order class to add to the list and method in line 417
+                    //  Create IceCream Object and it to the list Add the ice cream list to the order object
+                    newOrder.AddIceCream(makeIceCream(option, scoops, flavourList, toppingList)); 
 
                     // Ask if the user would like to add another ice cream to the order
                     while (true)
@@ -416,8 +423,8 @@ namespace S10257825_PRG2Assignment
                 return memberId;
             }
 
-            IceCream makeiceCream(string option, int scoops, List<Flavour> flavourList, List<Topping> toppingList)
-            {
+            IceCream makeIceCream(string option, int scoops, List<Flavour> flavourList, List<Topping> toppingList)
+            {                
                 /*  Creating IceCream object    */
                 IceCream iceCream = null;
                 if (option == "cup")
@@ -515,8 +522,9 @@ namespace S10257825_PRG2Assignment
                         }
 
                         //  Display available Flavours
-                        Console.WriteLine($"\nNormal flavours: [ {string.Join(", ", nonPremiumFlavours)} ]");
-                        Console.WriteLine($"Premium flavours (+$2 each): [ {string.Join(", ", premiumFlavours)} ]");
+                        Console.WriteLine($"\nNormal flavours:        [ {string.Join(", ",nonPremiumFlavours)} ]"); 
+                        Console.WriteLine($"Premium flavours (+$2): [ {string.Join(", ",premiumFlavours)} ]\n");
+                        
                         Console.Write($"Enter ice cream flavour for scoop {i + 1} : ");
                         string flavour = Console.ReadLine().Trim().ToLower();
 
@@ -663,11 +671,11 @@ namespace S10257825_PRG2Assignment
                 Console.WriteLine("--------------- Order History ---------------");
                 displayOrder(orderHistory.ToArray());
 
-                Console.WriteLine("--------------- Gold Queue ----------------");
-                displayOrder(goldQueue.ToArray());
+                List<Order> currentOrder = new List<Order> { customerDict[memberId].CurrentOrder };
+                Console.WriteLine("--------------- Current Order ----------------");
+                displayOrder(currentOrder.ToArray());
 
-                Console.WriteLine("--------------- Normal Queue ---------------");
-                displayOrder(normalQueue.ToArray());
+                
             }
 
             void option6()
@@ -770,8 +778,8 @@ namespace S10257825_PRG2Assignment
                     List<Flavour> flavourList = getFlavoursList(scoops);
                     int numToppings = getNumToppings();
                     List<Topping> toppingList = getToppingList(numToppings);
-
-                    IceCream newIceCream = makeiceCream(option, scoops, flavourList, toppingList);  //  Create IceCream Object
+                    
+                    IceCream newIceCream = makeIceCream(option, scoops, flavourList, toppingList);  //  Create IceCream Object
                     currentOrder.AddIceCream(newIceCream);  //  Add the ice cream object to the order object
 
                     //  List all the ice cream objects and details contained in the current order
@@ -862,8 +870,8 @@ namespace S10257825_PRG2Assignment
             void option7()
             {
                 Console.WriteLine("\n---------- Ice Creams in the order ----------\n");
-
-                //  Retreive the first order in the queue
+                
+                /*  Retreive the first order in the queue   */
                 Order currentOrder;
                 if (goldQueue.Count != 0) // Checks if the gold queue has order
                 {
@@ -888,9 +896,9 @@ namespace S10257825_PRG2Assignment
                 double mostExpensive = 0;
                 foreach (IceCream iceCream in currentOrder.IceCreamList)
                 {
-                    if (iceCream.CalculatePrice() > mostExpensive)
-                    {
-                        mostExpensive = iceCream.CalculatePrice();
+                    if (iceCream.CalculatePrice() > mostExpensive)  // Find the most expensive ice cream
+                    { 
+                        mostExpensive = iceCream.CalculatePrice(); 
                     }
                     totalAmount += iceCream.CalculatePrice();
                 }
@@ -910,15 +918,15 @@ namespace S10257825_PRG2Assignment
 
                 //  Display the membership status & points of the customer
                 Console.WriteLine($"\n{currentCustomer.Rewards.ToString()}");
-
-                //  Check if it is the customer’s birthday
+                
+                /*  Check if it is the customer’s birthday  */
                 if (currentCustomer.isBirthday())
                 {
                     totalAmount -= mostExpensive; // Remove the most expensive icecream from the total bill
                     Console.WriteLine($"It is your birthday. You get the most expensive ice cream for free!!!!\n");
                 }
 
-                //  Check if the customer has completed their punch card
+                /*  Check if the customer has completed their punch card    */
                 PointCard card = currentCustomer.Rewards;
                 if (card.PunchCard == 10)
                 {
@@ -933,63 +941,49 @@ namespace S10257825_PRG2Assignment
                     card.ResetPunchCard(); //  Reset the punch card
                 }
 
-                //  Check Pointcard status to determine if the customer can redeem points
+                /*  Check Pointcard status to determine if the customer can redeem points   */
                 if (currentCustomer.Rewards.Tier != "Ordinary" && currentCustomer.Rewards.Points != 0)
                 {
-                    string reply;
+                    int points;
                     do
-                    {   //  Prompt user to redeem points and validate
-                        Console.WriteLine($"You have {currentCustomer.Rewards.Points} points.");
-                        Console.Write("Would you like to redeem your points? (y/n): ");
-                        reply = Console.ReadLine().Trim().ToLower();
+                    {   //  Prompt user to enter the number of points to offset the bill
+                        try
+                        {
+                            Console.Write($"How many points do you want to redeem (1 point = $0.02): ");
+                            points = int.Parse(Console.ReadLine().Trim());
 
-                        if (reply != "y" && reply != "n")
-                        { Console.WriteLine("Please enter a valid value (y/n).\n"); }
-                        else { break; }
-                    } while (true);
-
-                    if (reply == "y")
-                    {
-                        int points;
-                        do
-                        {   //  Prompt user to enter the number of points to offset the bill
-                            try
+                            //  Check if the points is more than the points the customer has
+                            if (points > currentCustomer.Rewards.Points)
                             {
-                                Console.Write($"How many points do you want to redeem (1 point = $0.02): ");
-                                points = int.Parse(Console.ReadLine().Trim());
-
-                                //  Check if the points is more than the points the customer has
-                                if (points > currentCustomer.Rewards.Points)
-                                {
-                                    Console.WriteLine($"Unable to redeem {points} because you only have {currentCustomer.Rewards.Points} points.\n");
-                                }
-                                else { break; }
+                                Console.WriteLine($"Unable to redeem {points} because you only have {currentCustomer.Rewards.Points} points.\n");
                             }
-                            catch (FormatException)
-                            {
-                                Console.WriteLine("Please enter a valid integer.\n");
-                            }
-                        } while (true);
+                            else { break; }
+                        }
+                        catch(FormatException)
+                        {
+                            Console.WriteLine("Please enter a valid integer.\n");
+                        }
+                    }while (true);
 
-                        //  Redeem points
-                        card.RedeemPoints(points);
-                        totalAmount -= points * 0.02;
-                    }
+                    //  Redeem points
+                    card.RedeemPoints(points);
+                    totalAmount -= points * 0.02;
                 }
 
                 Console.WriteLine($"Final amount after deduction: {totalAmount:c2}\n");   //  Display the final total amount after deduction
 
                 //  Prompt user to make payment
-                Console.WriteLine("Press any key to make payment.....");
+                Console.WriteLine("Press any key to make payment........");
                 Console.ReadKey();
+                Console.WriteLine();
 
-                //  Increment the punch card for every ice cream in the order
+                /*  Increment the punch card for every ice cream in the order   */
                 foreach (IceCream iceCream in currentOrder.IceCreamList)
                 {
                     card.Punch();
                 }
 
-                //  Earn points
+                /*  Earn points */
                 int pointsEarned = (int)Math.Floor(totalAmount * 0.72); //  round down to the nearest integer
                 card.AddPoints(pointsEarned);
 
