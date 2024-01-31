@@ -1008,15 +1008,20 @@ namespace S10257825_PRG2Assignment
             {
                 try
                 {
+                    List<string> monthslist = new List<string>  //initialise a list to store all the months in a year
+                    {
+                        "January","February","March","April","May","June","July","August","September","October","November","December"
+                    };
+
                     Console.Write("Enter a year between 2010 and 2024: ");  //prompt the user for the year
                     string year = Console.ReadLine();  //takes in the user input as a string
                     if (int.TryParse(year, out int yearx) && yearx >= 2010 && yearx <= 2024)  //compares the user's input and checks if it is a valid integer with the try parse method and if it falls within the specified range and comtinues if it does 
                     {
-                        double yearlyIncome = 0;  //initialise a new variable yearly total as 0
-                        List<double> monthlyIncome = new List<double>();  //create a list to store monthly income values with double being the data type
+                        double yearlyIncome = 0;  //initialise a new variable yearlyIncome total as 0
+                        List<double> monthlyIncome = new List<double>();  //create a list to store monthly income values 
                         for (int i = 0; i < 12; i++)  //loops through the list 12 times to obtain the income of 12 months
                         {
-                            monthlyIncome.Add(0.0);  //initialise as 0 for every month first as the next loops will add values from completed orders 
+                            monthlyIncome.Add(0.0);  //initialise as 0 for first 12 iterations as the next loops will add values from completed orders 
                         }
                         foreach (var customer in customerDict.Values)  //iterate through every customer object in the dictionary created above
                         {
@@ -1033,15 +1038,14 @@ namespace S10257825_PRG2Assignment
                         Console.WriteLine($"\nMonthly Income for {year}:\n");
                         for (int i = 0; i < 12; i++)  //calculates for all 12 months in a year
                         {
-                            string month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i + 1);  //Create an object of CultureInfo and then get the month name using DateTimeFormat.GetMonthName() method.
-                            Console.WriteLine($"{month,-10}: ${monthlyIncome[i],-10:0.00}");
+                            Console.WriteLine($"{monthslist[i],-10}: ${monthlyIncome[i],-10:0.00}");  //interated through the months stored in the monthslist and shows the corresponding income for that month from the monthly income calculation accurate to the month
                         }
-                        Console.WriteLine("\n--------------------------------");
-                        Console.WriteLine($"Total for {year}: ${yearlyIncome:0.00}");
+                        Console.WriteLine("\n--------------------------------------------------------------------------------------------\n");
+                        Console.WriteLine($"Total income for the year {year}: ${yearlyIncome:0.00}\n");
                     }
                     else
                     {
-                        Console.WriteLine("\nIvalid year, please enter a year between 2010 and 2024\n");  //breaks out of the flow if the inputed year doesnt fall between the specified range
+                        Console.WriteLine("\nInvalid year, please enter a year between 2010 and 2024\n");  //breaks out of the flow if the inputed year doesnt fall between the specified range
                     }
                 }
                 catch (FormatException)  //catches format errors involving incorrect data types
