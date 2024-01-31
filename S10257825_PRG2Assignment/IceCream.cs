@@ -4,11 +4,12 @@
 // Partner Name : Keshwindren Gandipanh
 //==========================================================
 
+using System;
 using System.Collections.Generic;
 
 namespace S10257825_PRG2Assignment
 {
-    public abstract class IceCream
+    public abstract class IceCream : IEquatable<List<Flavour>>, IEquatable<List<Topping>>
         {
             // Properties
             private string _option;
@@ -59,6 +60,16 @@ namespace S10257825_PRG2Assignment
                     toppings = "No Toppings";
                 }
                 return $"\n\tFLavours : [{string.Join(", ",Flavours)}]\n\tToppings: [{toppings}]";
+            }
+
+            public bool Equals(List<Flavour> f)
+            {
+                return Flavours == f;
+            }
+            
+            public bool Equals(List<Topping> t)
+            {
+                return Toppings == t;
             }
         }
     

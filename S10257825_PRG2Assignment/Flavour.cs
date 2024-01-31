@@ -39,5 +39,4 @@ namespace S10257825_PRG2Assignment
             return $"{Type}";
         }
     }
-    
 }

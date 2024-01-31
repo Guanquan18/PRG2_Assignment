@@ -69,7 +69,7 @@ namespace S10257825_PRG2Assignment
 
         public override string ToString()
         {
-            return $"___________________________________" +
+            return $"===================================" +
                 $"\n| {"Memebrship",-10} | {"Points",-6} | {"PunchCard",-9} |" +
                 $"\n===================================" +
                 $"\n| {Tier,-10} | {Points,-6} | {PunchCard,-9} |" +

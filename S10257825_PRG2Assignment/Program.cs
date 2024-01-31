@@ -366,9 +366,7 @@ namespace S10257825_PRG2Assignment
                 foreach (Order order in orderArray)
                 {
                     if (order != null) //  Check if the order object is null
-                    {
-                        Console.WriteLine(order.ToString());
-                    }
+                    { Console.WriteLine(order.ToString()); }
                     else
                     {
                         Console.WriteLine("There is no order here.\n");
@@ -467,7 +465,7 @@ namespace S10257825_PRG2Assignment
                 // Ask if the user would like to add another ice cream to the order
                 while (true)
                 {
-                    Console.Write("\nWould you like to add another ice cream to the order? (Y/N): ");
+                    Console.Write("\nWould you like to add another ice cream to the order? (y/n): ");
                     string reply = Console.ReadLine().Trim().ToLower();
 
                     if (reply == "n")
@@ -475,7 +473,7 @@ namespace S10257825_PRG2Assignment
                     else if (reply == "y")
                     { repeat = true; break; }
                     else
-                    { Console.WriteLine("Please enter a valid input (Y/N). Try again."); }
+                    { Console.WriteLine("Please enter a valid input (y/n). Try again."); }
                 }
 
             } while (repeat);
@@ -632,6 +630,7 @@ namespace S10257825_PRG2Assignment
                     Console.WriteLine($"\nNormal flavours:        [ {string.Join(", ", nonPremiumFlavours)} ]");
                     Console.WriteLine($"Premium flavours (+$2): [ {string.Join(", ", premiumFlavours)} ]\n");
 
+                    //  Input validation for flavours
                     Console.Write($"Enter ice cream flavour for scoop {i + 1} : ");
                     string flavour = Console.ReadLine().Trim().ToLower();
 
@@ -750,36 +749,24 @@ namespace S10257825_PRG2Assignment
 
         public static string getWaffleFlavour()
         {
-            string reply;
             string waffleFlavour;
+            
             while (true)
             {
-                Console.Write("\nDo you want to choose premium waffle flavours with an additional cost of $3 (y/n): ");
-                reply = Console.ReadLine().Trim().ToLower();
+                Console.WriteLine("\nAvailable premium waffle flavours: [ Red Velvet, Charcoal, Pandan ]");
+                Console.Write("\nEnter (n) for orignal waffle flavour or a waffle flavour of your choice: ");
+                waffleFlavour = Console.ReadLine().Trim().ToLower();
 
-                if (reply != "y" && reply != "n")
-                { Console.WriteLine("Please enter a valid input (y/n).\n"); }
+                if (waffleFlavour != "red velvet" && waffleFlavour != "charcoal" && waffleFlavour != "pandan" && waffleFlavour != "n") //  Check if the string is a available flavour
+                { Console.WriteLine("Please enter a valid waffle flavour."); }
                 else
                 { break; }
             }
-
-            if (reply == "y")
-            {
-                while (true)
-                {
-                    Console.WriteLine("\nAvailable premium waffle flavours: [ Red Velvet, Charcoal, Pandan ]");
-                    Console.Write("Enter a waffle flavour: ");
-                    waffleFlavour = Console.ReadLine().Trim().ToLower();
-
-                    if (waffleFlavour != "red velvet" && waffleFlavour != "charcoal" && waffleFlavour != "pandan") //  Check if the string is a available flavour
-                    { Console.WriteLine("Please enter a valid waffle flavour."); }
-                    else
-                    { break; }
-                }
-            }
-            else { waffleFlavour = "original"; }
-
-            return waffleFlavour;
+            
+            if (waffleFlavour == "n")
+            { return "original"; }
+            else
+            { return waffleFlavour; }
         }
 
         public static void option5(Dictionary<int, Customer> customerDict)
@@ -830,58 +817,50 @@ namespace S10257825_PRG2Assignment
                 try
                 {
                     //  Input validation
-                    Console.WriteLine();
-                    Console.WriteLine("What would you like to do?");
-                    Console.WriteLine("[1] Modify an existing ice cream");
-                    Console.WriteLine("[2] Add a new ice cream");
-                    Console.WriteLine("[3] Delete an existing ice cream");
-                    Console.Write("Enter your option: ");
+                    Console.WriteLine("=====================================" +
+                                      "\n[1] Modify an existing ice cream" +
+                                      "\n[2] Add a new ice cream" +
+                                      "\n[3] Delete an existing ice cream" +
+                                      "\n[0] Exit" +
+                                      "\n=====================================");
+                    Console.Write("What would you like to do?: ");
                     reply1 = int.Parse(Console.ReadLine().Trim());
 
-                    if (reply1 < 1 || reply1 > 3)
+                    if (reply1 < 0 || reply1 > 3)
                     {
-                        Console.WriteLine("Please enter an option between 1 and 3. Try Again");
-                        continue;
+                        Console.WriteLine("Please enter an option between 0 and 3.\n");
                     }
-                    break;
+                    else { break; }
                 }
                 catch (FormatException)
-                {
-                    Console.WriteLine("Please enter a valid integer. try again.");
-                }
+                { Console.WriteLine("Please enter a valid integer.\n"); }
             }
 
             if (reply1 == 1)
             {
-                Console.WriteLine("n\n---------- Modify an existing ice cream ----------");
-
+                Console.WriteLine("\n---------- Modify an existing ice cream ----------\n");
+                
                 //  Prompt the user to select which ice cream to modify
                 int reply2;
                 while (true)
                 {
                     try
                     {
-                        Console.Write($"Enter which ice cream you want to modify from 1 to {currentOrder.IceCreamList.Count}");
+                        Console.Write($"Enter which ice cream you want to modify from 1 to {currentOrder.IceCreamList.Count}: ");
                         reply2 = int.Parse(Console.ReadLine().Trim());
 
-                        if (reply2 < 1 || reply2 > currentOrder.IceCreamList.Count)
+                        if (reply2 < 1 || reply2 > currentOrder.IceCreamList.Count) //  Check if the reply is between 1 and the number of ice cream in the list
                         {
                             Console.WriteLine($"Please enter a option from 1 to {currentOrder.IceCreamList.Count}. Try again.");
                         }
                         else { break; }
                     }
                     catch (FormatException)
-                    {
-                        Console.WriteLine($"Please enter a valid integer. Try again.");
-                    }
+                    { Console.WriteLine($"Please enter a valid integer. Try again."); }
                 }
 
-                //  Modify the ice cream from the iceCream list based on the index
-                currentOrder.ModifyIceCream(reply2 - 1);
-
-                Console.WriteLine(currentOrder.ToString()); //  List all the ice cream objects and details contained in the current order
-
-                Console.WriteLine("\nIce cream has been modified successfully.\n");
+                currentOrder.ModifyIceCream(reply2 - 1);    //  Modify the ice cream from the iceCream list based on the index
+                Console.WriteLine(currentOrder.ToString()); //  List all the ice cream objects and details contained in the current 
             }
 
             else if (reply1 == 2)
@@ -904,8 +883,13 @@ namespace S10257825_PRG2Assignment
             }
             else
             {
-                Console.WriteLine("\n---------- Delete an existing ice cream ----------");
+                Console.WriteLine("\n---------- Delete an existing ice cream ----------\n");
 
+                if (currentOrder.IceCreamList.Count == 1) //  Check if there is only 1 ice cream in the list
+                {
+                    Console.WriteLine("There is only 1 ice cream in the order. You cannot delete this icecream from the order.\n");
+                    return;
+                }
                 //  Prompt the user to select which ice cream to delete
                 int reply2;
                 while (true)
