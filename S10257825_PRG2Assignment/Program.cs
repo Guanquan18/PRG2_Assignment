@@ -16,6 +16,7 @@ namespace S10257825_PRG2Assignment
         public static Dictionary<string, int> flavourDictAvailability = new Dictionary<string, int>();
         public static Dictionary<string, int> toppingDictAvailability = new Dictionary<string, int>();
 
+
         public static void InitialiseHistory(Dictionary<int, Customer> customerDict)
         {
             /*  Read customers.csv file */
@@ -28,11 +29,11 @@ namespace S10257825_PRG2Assignment
                 int memberId = Convert.ToInt32(info[1]);
                 DateTime dob = Convert.ToDateTime(info[2]);
                 string membershipStatus = info[3];
-                int membershipPoints = 400;//Convert.ToInt32(info[4]);
+                int membershipPoints = Convert.ToInt32(info[4]);
                 int punchCard = Convert.ToInt32(info[5]);
 
                 // Create a customer object (makes use of the parameterised constructor in the customer class)
-                Customer customer = new Customer(info[0], memberId, DateTime.Now);
+                Customer customer = new Customer(info[0], memberId, dob);
 
                 // Add associated information(rewards) to the customer object as it is associated with the customer class
                 customer.Rewards = new PointCard(membershipPoints, punchCard)  //same customer object and uses the point card class' parameterised constructor which takes in the membership points and punchcard
@@ -872,7 +873,7 @@ namespace S10257825_PRG2Assignment
             double mostExpensive = 0;
             /*  Check if it is the customer’s birthday  */
             bool birthday = currentCustomer.isBirthday();
-            if (currentCustomer.isBirthday())
+            if (currentCustomer.RedeemBirthday())
             {
                 //  Check if the most expensive ice cream is the first ice cream
                 foreach (IceCream iceCream in currentOrder.IceCreamList)
@@ -890,23 +891,8 @@ namespace S10257825_PRG2Assignment
             PointCard card = currentCustomer.Rewards;
             if (card.PunchCard == 10)
             {
-                /*if (!currentCustomer.isBirthday() && currentOrder.IceCreamList.Count == 1)
-                {
-                    Console.WriteLine("Since it is your birthday.\n");
-                }
-                //  Check if the most expensive ice cream is the first ice cream and if there is more than 1 ice cream in the order
-                else if (currentCustomer.isBirthday() && currentOrder.IceCreamList[0].CalculatePrice() == mostExpensive && currentOrder.IceCreamList.Count !=1)
-                { 
-                    totalAmount -= currentOrder.IceCreamList[1].CalculatePrice();   // Remove the second icecream from the total amount
-                    Console.WriteLine($"Since it's your birthday and your punch card has reach 10, you get the second ice cream for free too!!!!\n"); 
-                }
-                else if (currentCustomer.isBirthday() && currentOrder.IceCreamList[0].CalculatePrice() != mostExpensive && currentOrder.IceCreamList.Count != 1)
-                {
-
-                }
-                else*/
                 
-                 totalAmount -= currentOrder.IceCreamList[0].CalculatePrice(); // Remove the first icecream from the total amount
+                totalAmount -= currentOrder.IceCreamList[0].CalculatePrice(); // Remove the first icecream from the total amount
 
                 Console.WriteLine("Your punch card has reach 10. You will get the first ice cream in your order for free!!!\n");
                 card.ResetPunchCard(); //  Reset the punch card
@@ -937,7 +923,7 @@ namespace S10257825_PRG2Assignment
                             }
                             else if (points > totalAmount / 0.02) //  Check if the points redemned is more than the final bill
                             {
-                                Console.WriteLine($"Unable to redeem more than {totalAmount / 0.02} points to offset ur final bill \n");
+                                Console.WriteLine($"Unable to redeem more than {totalAmount / 0.02} points to offset ur final bill.\n");
                             }
                             else { break; }
                         }
@@ -950,6 +936,9 @@ namespace S10257825_PRG2Assignment
                     //  Redeem points
                     card.RedeemPoints(points);
                     totalAmount -= points * 0.02;
+                    
+                    if (totalAmount < 0)
+                    { totalAmount = 0; }
                 }
             }
 

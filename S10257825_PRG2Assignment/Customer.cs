@@ -18,6 +18,8 @@ namespace S10257825_PRG2Assignment
         private Order _currentOrder;
         private List<Order> _orderHistory = new List<Order>();
         private PointCard _rewards;
+        private bool _birthdayRedeemAble = false;
+        private bool _redeemed = false;
 
         // Attributes
         public string Name
@@ -55,6 +57,19 @@ namespace S10257825_PRG2Assignment
             set { _rewards = value; }
         }
 
+        public bool BirthdayRedeemAble
+        {
+            get { return _birthdayRedeemAble; }
+            set { _birthdayRedeemAble = value; }
+        }
+
+        public bool Redeemed
+        {
+            get { return _redeemed; }
+            set { _redeemed = value; }
+        }
+
+
         // Constructors
         public Customer() { }
 
@@ -77,7 +92,8 @@ namespace S10257825_PRG2Assignment
             int year = DateTime.Now.Year;
             int month = DateTime.Now.Month;
             int day = DateTime.Now.Day;
-            
+
+
             if (year == Dob.Year && month == Dob.Month && day == Dob.Day)
             {
                 return true;
@@ -86,6 +102,23 @@ namespace S10257825_PRG2Assignment
             {
                 return false;
             }
+        }
+        public bool RedeemBirthday()
+        {
+            if (isBirthday() && Redeemed == false && BirthdayRedeemAble == false)
+            {
+                BirthdayRedeemAble = true;
+                Redeemed = true;
+                return true;
+            }
+            else if (isBirthday() && Redeemed == true)
+            {
+                return false;
+            }
+            else
+            {
+                return false;
+            } 
         }
 
         public override string ToString()
